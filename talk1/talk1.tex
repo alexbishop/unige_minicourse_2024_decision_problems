@@ -1,0 +1,2781 @@
+\documentclass[11pt,a4paper,reqno]{amsart}
+
+% localisation settings
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[australian]{babel}
+\usepackage{csquotes}
+
+\usepackage{microtype}
+
+\usepackage{fullpage}
+
+\usepackage{enumitem}
+
+\usepackage{amsfonts,amsmath,amsthm,amssymb,mathtools,stmaryrd,mathrsfs}
+\usepackage{thmtools, thm-restate}
+
+% defines \righttoleftarrow
+\usepackage[mathb]{mathabx}
+\changenotsign
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Pseudocode
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[ruled]{algorithm2e}
+
+\makeatletter
+\newcommand{\algorithmstyle}[1]{\renewcommand{\algocf@style}{#1}}
+\makeatother
+
+\SetKwProg{Fn}{fn}{ \{}{\}}
+\SetKwProg{MainFn}{entry fn}{ \{}{\}}
+\SetKwIF{If}{ElseIf}{Else}{if (}{) \{}{\} else if (}{\} else \{}{\}}
+\SetKwFor{While}{while (}{) \{}{\}}
+
+\SetKw{Or}{or}
+\SetKw{And}{and}
+\SetKw{Not}{not}
+
+\SetKw{Len}{len}
+\SetKw{Get}{get}
+\SetKw{Append}{append}
+\SetKw{RemoveLast}{removeLast}
+
+\SetKw{Let}{let }
+\newcommand{\Assign}[2]{\Let{#1 $\gets$ #2}}
+\newcommand{\Reassign}[2]{#1 $\gets$ #2}
+
+\DontPrintSemicolon
+\newcommand{\EOL}{\,\textbf{;}\;}
+\newcommand{\EOLComment}[1]{\,\textbf{;}\tcp*[l]{#1}}
+
+\newcommand\True{true}
+\newcommand\False{false}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Table of contents
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\def\l@section{\@tocline{1}{12pt plus 2pt}{0pt}{}{\bfseries}}% <- added
+
+\def\@tocline#1#2#3#4#5#6#7{\relax
+  \ifnum #1>\c@tocdepth % then omit
+  \else
+    \par \addpenalty\@secpenalty\addvspace{#2}%
+    \begingroup \hyphenpenalty\@M
+    \@ifempty{#4}{%
+      \@tempdima\csname r@tocindent\number#1\endcsname\relax
+    }{%
+      \@tempdima#4\relax
+    }%
+    \parindent\z@ \leftskip#3\relax \advance\leftskip\@tempdima\relax
+    \rightskip\@pnumwidth plus4em \parfillskip-\@pnumwidth
+    #5\leavevmode\hskip-\@tempdima #6\nobreak\relax
+     \ifnum#1<2\hfill\else\dotfill\fi %<- added
+     \hbox to\@pnumwidth{\@tocpagenum{#7}}\par
+    \nobreak
+    \endgroup
+\fi}
+\makeatother
+
+\setcounter{tocdepth}{3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Hyperref
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.55}
+\hypersetup{%
+	% link colours
+	colorlinks=true,
+	linkcolor = darkblue,
+	anchorcolor = darkblue,
+	citecolor = darkblue,
+	filecolor = darkblue,
+	urlcolor = darkblue,
+	% links in table of contents
+	linktoc=page
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% \llangle and \rrangle
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\DeclareFontFamily{OMX}{MnSymbolE}{}
+\DeclareSymbolFont{MnLargeSymbols}{OMX}{MnSymbolE}{m}{n}
+\SetSymbolFont{MnLargeSymbols}{bold}{OMX}{MnSymbolE}{b}{n}
+\DeclareFontShape{OMX}{MnSymbolE}{m}{n}{
+    <-6>  MnSymbolE5
+   <6-7>  MnSymbolE6
+   <7-8>  MnSymbolE7
+   <8-9>  MnSymbolE8
+   <9-10> MnSymbolE9
+  <10-12> MnSymbolE10
+  <12->   MnSymbolE12
+}{}
+\DeclareFontShape{OMX}{MnSymbolE}{b}{n}{
+    <-6>  MnSymbolE-Bold5
+   <6-7>  MnSymbolE-Bold6
+   <7-8>  MnSymbolE-Bold7
+   <8-9>  MnSymbolE-Bold8
+   <9-10> MnSymbolE-Bold9
+  <10-12> MnSymbolE-Bold10
+  <12->   MnSymbolE-Bold12
+}{}
+
+\let\llangle\@undefined
+\let\rrangle\@undefined
+\DeclareMathDelimiter{\llangle}{\mathopen}%
+                     {MnLargeSymbols}{'164}{MnLargeSymbols}{'164}
+\DeclareMathDelimiter{\rrangle}{\mathclose}%
+                     {MnLargeSymbols}{'171}{MnLargeSymbols}{'171}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% cleveref and theorems
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[capitalise,noabbrev,sort]{cleveref}
+
+\definecolor{tol1}{RGB}{68, 119, 170}
+\definecolor{tol2}{RGB}{34, 136, 51}
+\definecolor{tol3}{RGB}{204, 187, 68}
+\definecolor{tol4}{RGB}{238, 102, 119}
+
+\definecolor{tolExtra}{RGB}{0, 68, 136}
+
+\theoremstyle{plain}
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{question}[theorem]{Question}
+
+\usepackage[many]{tcolorbox}
+\newcommand\colorthm[2]{\tcolorboxenvironment{#1}{
+		colback=#2!10!white,
+		boxrule=0pt,
+		boxsep=1pt,
+		left=2pt,right=2pt,top=2pt,bottom=2pt,
+		oversize=2pt,
+		sharp corners,
+		before skip=\topsep,
+		after skip=\topsep,
+}}
+\colorthm{theorem}{tol1}
+\colorthm{lemma}{tol1}
+\colorthm{proposition}{tol1}
+\colorthm{corollary}{tol1}
+
+\colorthm{definition}{tol2}
+
+\colorthm{example}{tol3}
+\colorthm{remark}{tol3}
+\colorthm{note}{tol3}
+
+\colorthm{exercise}{tol4}
+\colorthm{question}{tol4}
+
+% additional theorem with letters
+\newtheorem{theoremx}{Theorem}
+\renewcommand{\thetheoremx}{\Alph{theoremx}}
+\newtheorem{corollaryx}{Corollary}[theoremx]
+
+\crefalias{theoremx}{theorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[
+	backend=biber,
+	style=numeric-comp,
+	maxcitenames=10,
+	maxbibnames=100,
+	safeinputenc,
+	useprefix
+]{biblatex}
+\addbibresource{talk1.bib}
+\usepackage{mathscinet}
+
+% make sure that names are not sorted by prefix first
+\DeclareSortingNamekeyTemplate{
+	\keypart{
+		\namepart{family}}
+	\keypart{
+		\namepart{prefix}}
+	\keypart{
+		\namepart{given}}
+	\keypart{
+		\namepart{suffix}}
+}
+
+% make sure that the prefix is not capitalised
+%  BibLaTeX will capitalise the first letter in some cases, this stops this
+\renewbibmacro{begentry}{\midsentence}
+
+% make sure that biblatex uses a non-breaking space in \textcite
+\renewcommand\namelabeldelim{\addnbspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Various commands
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand\leq\leqslant
+\renewcommand\geq\geqslant
+
+\newcommand\Cay{\ensuremath{\mathrm{Cay}}}
+\newcommand\Ball{\ensuremath{\mathrm{B}}}
+\newcommand\Area{\ensuremath{\mathrm{Area}}}
+
+\newenvironment{indentline}{\begin{itemize}[leftmargin=1em]\item[]}{\end{itemize}}
+\newcommand\hl[1]{\colorbox{gray!10}{#1}}
+
+\newenvironment{myproof}{\begin{proof}[\normalfont\bfseries Proof.]}{\end{proof}}
+
+\newcommand\hnn{*\!\!\righttoleftarrow}
+\newcommand\Grp{\textsc{Grp}}
+
+% levels of difficulty of the exercises
+\newcommand\exerciseLevelEasy{$\star$}
+\newcommand\exerciseLevelMedium{$\star${\,}$\star$}
+\newcommand\exerciseLevelHard{$\star${\,}$\star${\,}$\star$}
+\newcommand\exerciseLevelVeryHard{$\star${\,}$\star${\,}$\star${\,}$\star$}
+
+\begin{document}
+
+\title{Decision problems in group theory\\(Part 1: Definitions and Background)}
+\author{Alex Bishop}
+\date{21 May 2024 \textit{(updated 7 Feb 2025)}}
+\email{alexbishop1234@gmail.com}
+\urladdr{https://alexbishop.github.io}
+\address{%
+	Section de mathématiques\\
+	Université de Genève\\
+	rue du Conseil-Général~7-9\\
+	1205 Genève, Switzerland}
+
+\begin{abstract}
+	In 1911, Max Dehn considered the word problem, conjugacy problem and isomorphism problem for finitely presented groups. Motivation for these problems can be found in algebraic topology. In particular, the word problem allows us to verify if a curve is contractable; the conjugacy problem enables us to check if two given curves are free homotopic; and the isomorphism problem gives us a method to confirm that two spaces are not isomorphic. Moreover, in the case of knot theory, the isomorphism problem allows us to identify if a given knot is the unknot. These three problems, studied by Dehn, are fundamental to the study of group theory and are all examples of decision problems of groups.
+
+	In our first talk, we focus on the word problem for groups. Solutions to this problem are important as they allow us to perform calculations and decide on the equality of group elements. We begin by studying examples and classes of groups for which the word problem is easily solvable. In fact, under certain interpretations of random group presentations, almost all finitely presented groups have such an easily solvable word problem. We end this talk by showing that there exist finitely presented groups with undecidable word problems, that is, there is no algorithm that can correctly determine if any given product of group generators is the group identity.
+
+	In our second talk, we study the class of group properties known as Markov properties. Examples of such properties include being the trivial group, finite, abelian, amenable, torsion-free, having a solvable word problem, or having a solvable conjugacy problem. Using the unsolvability of the word problem from our first talk, we show that no algorithm can decide if a given finitely presented group has a particular Markov property. For example, it is impossible, in general, to decide if a given finitely presented group is abelian.
+\end{abstract}
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Finitely Presented Groups}
+
+In this minicourse, we are interested in whether there exists a computer program to decide certain types of problems in groups.
+We focus on the class of finitely presentable groups, however we see from \cref{lem:universal-pres} that this is as strong of a restriction as one might first think.
+
+We say that a group $G$ is finitely presentable if it can be completely described by a finite set of generators $X$, and a finite set of defining relators $R \subset (X^{\pm 1})^*$.
+We denote such a group as
+\begin{equation}\label{eq:finite-pres}
+	G = \left\langle X \mid R \right\rangle.
+\end{equation}
+Formally, such a group is defined as the quotient
+$
+	G = F_X / \left\llangle R \right\rrangle_{F_X}
+$
+where $F_X$ is the free group over the generating set $X$ and $\left\llangle R \right\rrangle_{F_X}$ is the smallest normal subgroup of $F_X$ which contains the elements in the set $R$.
+That is, $\left\llangle R \right\rrangle_{F_X}$ is the set of elements
+\begin{equation}\label{eq:relations}
+	\left\llangle R \right\rrangle_{F_X}
+	=
+	\left\{
+	w\in F_X
+	\ \middle|\
+	w =_{F_X} \prod_{i=1}^k u_i r_i^{\varepsilon_i} u_i^{-1}
+	\text{ for some }k \geq 0\text{ with } u_i\in F_X,\ \varepsilon_i =\pm 1\text{ and }r_i \in R
+	\right\}.
+\end{equation}
+By the definition of group quotients, we then see that $w=_G 1$ if and only if $w\in \left\llangle R \right\rrangle_{F_X}$.
+
+\begin{exercise}[\exerciseLevelEasy]
+	Prove that the set given in (\ref{eq:relations}) is in fact the smallest normal subgroup of $F_X$ which contains $R$.
+\end{exercise}
+
+\section{History and Motivation}
+
+Interest in the formal study of decision problems in group is attributed to the 1911 paper of Dehn~\cite{dehn1911}, in which the following three problems were considered for finitely presented group.
+
+\subsection{Word problem}
+
+Given a finite presentation for a group $G = \left\langle X \mid R \right\rangle$, does there exist an algorithm for which, given any word $w\in (X^{\pm 1})^*$, it decides yes/no if $w =_G 1$.
+If $w=_G 1$, then we say that $w$ \emph{belongs to the word problem}.
+
+This problem is important in general as it allows us to verify if two words $u,v \in (X^{\pm 1})^*$ represent the same element.
+In particular, $u =_G v$ if and only if $v^{-1}u =_G 1$.
+This then allows us to perform calculations within a group.
+
+
+\subsection{Conjugacy problem}
+
+Given a finitely presented group $G = \left\langle X \mid R\right\rangle$, does there exist an algorithm for which, given any pair of words $u,v \in (X^{\pm 1})^*$, decides yes/no if there exists a word $z \in (X^{\pm 1})^*$ for which $z^{-1} u z =_G v$.
+
+It is clear that if we can solve the conjugacy problem, then we can also solve the word problem.
+In particular, a word represents the identity if and only if it represents an element which is conjugate to the identity (as represented by the empty word).
+
+\subsection{Isomorphism problem}
+
+Does there exist an algorithm for which, given two finitely group presentations, decides if the groups given by these presentations are isomorphic.
+
+We note here that it is always possible to prove that two finite presentations give the same group by applying a finite number of \textit{Tietze transformations}.
+However, in our second talk, we see that it is not always possible to prove that two given finite presentations give different groups.
+
+\section{Examples of Solvable Word Problems}
+
+In this talk, we focus on the word problem for finitely presented groups.
+We begin by noting that for many classes of groups, the word problem can be easily solved.
+
+\subsection{Finite groups}
+
+For any given finite group, there exists a finite multiplication table.
+Thus, given any word in the group, we can perform the multiplications from left to right using such a finite table and find a canonical representative for the resulting element.
+
+It is a result of Anisimov~\cite{anisimov1971} that the word problem for a finite group can be solved using a very simple kind of algorithm known as a \textit{finite-state automaton}.
+That is, an algorithm which has a global upper bound on how much memory it requires to operate.
+
+\subsection{Free groups}
+
+Given a free basis $X$ for a free group, we know that a word $w\in (X^{\pm 1})^*$ represents the group identity if and only if it freely reduces to the empty word.
+That is, by repeatedly removing factors of the form $x x^{-1}$ and $x^{-1}x$ until no such factor exists in the word.
+
+It is well known that the word problem of a free group can be recognised by a type of algorithm known as a \textit{pushdown automaton}.
+In fact, it is a result of Muller and Schupp~\cite{muller1983} that a finitely generated group contains a free group of finite index if and only if its word problem can be recognised by a pushdown automaton (which is equivalent to being a \textit{context-free language}).
+
+\subsection{Abelian groups}
+
+By the fundamental theorem of finitely generated abelian groups (see~\cite{poincare1900}), any such group $A$ is isomorphic to some direct product
+\[
+	A \cong \mathbb Z^k \times \mathbb Z_{p_1}\times \mathbb Z_{p_2}\times\cdots\times \mathbb Z_{p_m}
+\]
+where each $\mathbb Z_{p_i}$ is a finite cyclic group.
+We can thus solve the word problem in such groups by performing vector addition and checking if we obtain the zero vector at the end.
+
+It is a result of Elder, Kambites and Gretchen~\cite{elder2008} that a finitely generated group has an abelian group as a finite-index subgroup if and only if its word problem can be recognised by a type of algorithm known as a \textit{blind multicounter automaton}.
+
+\subsection{Matrix groups}
+
+Suppose we are given a finitely generated group $G \subset \mathrm{GL}_n(\mathbb Q)$.
+That is, a group where each generator is given by a matrix in $\mathrm{GL}_n(\mathbb Q)$.
+We can thus solve the word problem for such groups by performing matrix multiplication.
+From a result of Auslander~\cite[Theorem~2]{Auslander1967}, it is known that every polycyclic and thus every virtually nilpotent group is matrix group.
+From our previous minicourse \cite{minicoursePrev} on the volume growth of groups, we saw that the virtually nilpotent groups are exactly the groups with polynomial volume growth (as proven in \cite{Gromov1981}).
+
+\subsection{Simple groups}\label{sec:solvable-simple}
+
+We begin by defining \emph{simple groups} as follows.
+
+\begin{definition}
+A group $G$ is \emph{simple} if its only normal subgroups are $G$ and the trivial group.
+\end{definition}
+
+The word problem for a finitely presented simple group is solvable.
+In particular, given a nontrivial finitely presented simple group $G = \left\langle X\mid R\right\rangle$, we compute the word problem for a given word $w\in (X^{\pm 1})^*$ by running the following two sub-algorithms in parallel:
+\begin{enumerate}
+  \item\label{item:algo-simple-group/1} Iterate over all words which can be written as
+    \[
+      \prod_{i=1}^n u_i r_i^{\varepsilon_i} u_i^{-1} \in (X^{\pm 1})^*
+    \]
+    where $n\in \mathbb N$ each $r_i\in R$, $\varepsilon_i \in \{-1,1\}$ and $u_i\in (X^{\pm 1})^*$.
+    In each such iteration, check if the word is equivalent to $w$ up to free reductions.
+    If $w$ lies in the word problem, then this process will eventually find a proof for this fact.
+
+  \item For the group $G/\left\llangle w\right\rrangle_{G} = \left\langle X \mid R\cup \{w\}\right\rangle$, attempt to prove that each generator $x\in X$ lies in the word problem for $G/\left\llangle w\right\rrangle_G$ using the same technique as in part (\ref{item:algo-simple-group/1}) above.
+    Thus, if $G/\left\llangle w\right\rrangle_G$ is the trivial group, then this process will eventually find a proof.
+
+    From our assumption on $G$, we see that $G/\left\llangle w \right\rrangle_G$ is the trivial group if and only if $w$ does not belong to the word problem.
+    Thus, if $w$ does not belong to the word problem, then this process will eventually find a proof of this fact.
+\end{enumerate}
+\noindent
+Notice that one of the above sub-algorithms must eventually terminate, after which, our main algorithm has its answer and can return yes/no as to whether $w$ lies in the word problem of $G$.
+
+\subsection[Virtually something]{Virtually \textit{something}}
+
+Suppose that the group $G$ has a solvable word problem, and contains the finitely presented group $H$ as a finitely-generated subgroup.
+Then, $H$ has a solvable word problem, and every finite-index overgroup of $G$ has a solvable word problem.
+
+\begin{exercise}[\exerciseLevelMedium]
+	Prove the above statement, that is, that having a solvable word problem is invariant under passing to finite-index overgroups and finitely-generated subgroups.
+\end{exercise}
+
+\subsection{Extensions}
+
+Having solvable word problems is invariant under taking direct products, free products and wreath products.
+In particular, if $G$ and $H$ are groups with solvable word problems, then the groups $G\times H$, $G*H$ and $G\wr H$ all have solvable word problems.
+
+\begin{exercise}[\exerciseLevelMedium]
+  Prove the above statement, that is, show that having a solvable word problem is invariant under taking the above extensions.
+\end{exercise}
+
+\section{Computable and Recursively Enumerable Functions and Sets}\label{sec:computable}
+
+Throughout this talk, we will use the terms \emph{computable} and \emph{recursively enumerable}.
+There are many equivalent definitions of computability in the literature.
+For completeness, in this section we provide a background on the computability.
+Moreover, we define what it means for a (partial) function to be computable, a set to be computable, and for a set to be recursively enumerable.
+
+This section begins by introducing a simple programming language which we use as our model of computation in this talk.
+Although we will not prove it here, it is the case that the model of computation we introduce is equivalent in power to that of \textit{lambda calculus} (as studied by Church~\cite{church1932}) and the \textit{Turing machine} (as studied by Turing~\cite{turing1936}).
+These two models of computation are seen as being \textit{universal}, i.e., anything that can be computed can be computed on a Turing machine, and thus can be computed within our programming language.
+
+To simplify the description of our programming language, we begin with some small examples.
+We give a more formal definition of our language later in this section.
+
+\subsection{Examples}
+
+We give some example implementations of some (partial) functions as follows.
+
+\subsubsection{Example 1: Computable Functions}
+
+Let $f\colon \mathbb N \times \mathbb N \to \mathbb N$ be defined as
+\[
+  f(n,m)
+	=
+	\begin{cases}
+		0                                                   & \text{if }m =0 \text{ or }m=1, \\
+		k\in \{0,1,2,\ldots,m-1\}\text{ with }k\equiv n \bmod{m} & \text{otherwise}.
+	\end{cases}
+\]
+Then, we may compute this function using \cref{alg:mod} given as follows.
+
+\medskip
+	\SetKwFunction{moduloFn}{modulo}
+	\SetKwFunction{subFn}{subtract}
+
+\begin{algorithm}[H]
+
+	\MainFn{\moduloFn{$n\colon\mathbb N$, $m\colon\mathbb N$} $\mathbb N$} {
+		\uIf{$m = 0$ \Or $m = 1$}{
+			\Return 0\EOL
+		}\Else{
+			\Assign{$k\colon \mathbb N$}{$n$}\EOL
+
+			\While{$k \geq m$}{
+        \Reassign{$k$}{\subFn{$k$, $m$}}\EOL
+			}
+			\Return $k$\EOL
+		}
+	}
+
+  \tcp{The following helper function\\
+      {}\ (1) does not terminate if a < b;\\
+      {}\ (2) computes and returns a-b otherwise}
+  \Fn{\subFn{$a\colon\mathbb N$, $b\colon\mathbb{N}$} $\mathbb N$} {
+    \Assign{$\mathrm{guess}\colon \mathbb N$}{$0$}\EOL
+    \While{$ a \neq (\mathrm{guess} + b) $}{
+      \Reassign{$\mathrm{guess}$}{$\mathrm{guess}+1$}\EOL
+    }
+    \Return{$\mathrm{guess}$}\EOL
+  }
+
+	\caption{Modular arithmetic\label{alg:mod}}
+\end{algorithm}
+
+\subsubsection{Example 2: Computable Partial Functions}
+
+It is not always the case that a computation terminates.
+In such cases, the computation would describe a partial function.
+For example, suppose we define the partial function $f\colon \mathbb N \rightharpoonup\mathbb N$ such that $f(k^2) = k$ for each $k \in \mathbb N$, and $f(n)$ is only defined if $n$ is a square.
+Then, an implementation of this function is given in \cref{alg:sqrt}.
+
+\medskip
+
+\begin{algorithm}[H]
+	\SetKwFunction{sqrtFn}{sqrt}
+
+	\MainFn{\sqrtFn{n$\colon\mathbb N$} $\mathbb N$} {
+		\Assign{$\mathrm{guess}\colon \mathbb N$}{$0$}\EOL
+
+		\While{$(\mathrm{guess}\cdot \mathrm{guess}) \neq n$}{
+			\Reassign{$\mathrm{guess}$}{$\mathrm{guess} + 1$}\EOL
+		}
+		% \tcp{we may only reach this point if guess is the correct output}
+		\Return $\mathrm{guess}$\EOL
+	}
+	\caption{Integer square root\label{alg:sqrt}}
+\end{algorithm}
+
+\subsubsection{Example 3: Multiple Outputs}
+
+Let $f\colon \mathbb N \times \mathbb N \to \mathbb N \times \mathbb N$ be defined as
+\[
+  f(n,m)
+  =
+  \begin{cases}
+    (0,n) &\text{if } m = 0,\\
+  (a,b)
+  \text{ where }
+  n = a\cdot m + b
+  \text{ and }
+    b < m&\text{otherwise}.
+  \end{cases}
+\]
+This function is computable as shown by the algorithm given in \cref{alg:div}.
+
+\medskip
+
+	\SetKwFunction{divideFn}{div}
+
+\begin{algorithm}[H]
+
+	\MainFn{\divideFn{$n\colon\mathbb N$, $m\colon\mathbb N$} $\mathbb N\times \mathbb N$} {
+		\uIf{$m = 0$}{
+			\Return $(0,\ n)$\EOL
+		}\Else{
+			\Assign{$a\colon \mathbb N$}{$0$}\EOL
+			\Assign{$b\colon \mathbb N$}{$n$}\EOL
+
+			\While{$b \geq m$}{
+        \Reassign{$a$}{$a+1$}\EOL
+        \Reassign{$b$}{\subFn{$b$, $m$}}\EOL
+			}
+			\Return $(a,\ b)$\EOL
+		}
+	}
+
+  \tcp{The following helper function\\
+      {}\ (1) does not terminate if a < b;\\
+      {}\ (2) computes and returns a-b otherwise}
+  \Fn{\subFn{$a\colon\mathbb N$, $b\colon\mathbb{N}$} $\mathbb N$} {
+    \Assign{$\mathrm{guess}\colon \mathbb N$}{$0$}\EOL
+    \While{$ a \neq (\mathrm{guess} + b) $}{
+      \Reassign{$\mathrm{guess}$}{$\mathrm{guess}+1$}\EOL
+    }
+    \Return{$\mathrm{guess}$}\EOL
+  }
+
+	\caption{Division with remainder\label{alg:div}}
+\end{algorithm}
+
+\subsection{Language definitions}
+In this subsection, we provide some further specification of our programming language.
+This subsection should be treated as a reference for the reader.
+
+\subsubsection{Fundamental types}\label{sec:fundamental-types}
+
+In order to continue with the introduction of our programming language, we must fix the list of allowable types as follows.
+\begin{itemize}[leftmargin=2em]
+  \item Booleans: $\mathbb B = \{\mathrm{true}, \mathrm{false}\}$.
+
+	      \smallskip
+	      \noindent
+	      \textit{Supported operations}:
+        Let $x$ and $y$ be expressions of type $\mathbb B$:
+        \begin{enumerate}
+          \item comparison: \hl{$x = y$} and \hl{$x \neq y$};
+          \item logical negation: \hl{{\Not $x$}};
+          \item logical and/conjunction: \hl{$x$ \And $y$}; and
+          \item logical or/disjunction: \hl{$x$ \Or $y$}.
+        \end{enumerate}
+        We note here that all of the above expressions are of type $\mathbb B$.
+
+        \medskip
+
+        \begin{remark}
+        The more advanced reader may now be questioning whether conjunction and disjunction are short-circuited in our language.
+        For all examples we see in this talk, it will not make a difference either way.
+        However, in the interests of standardisation, we will say that these operations are indeed short-circuited.
+        \end{remark}
+
+        \medskip
+
+	\item Naturals: $\mathbb N = \{0,1,2,\ldots\}$.
+
+	      \smallskip
+	      \noindent
+	      \textit{Supported operations}:
+	      Let $x$ and $y$ be expressions of type $\mathbb N$:
+	      \begin{enumerate}
+		      \item comparison:
+            \hl{$x = y$},
+            \hl{$x \neq y$},
+                  \hl{$x < y$},
+                  \hl{$x \leq y$},
+                  \hl{$x > y$}, and
+                  \hl{$x \geq y$}
+		            have type $\mathbb B$;
+          \item sum: \hl{$x+y$} has type $\mathbb N$; and
+          \item product: \hl{$x\cdot y$} has type $\mathbb N$
+	      \end{enumerate}
+	      Notice that we do not directly support subtraction or division since these are not well-defined for the natural numbers.
+        See \cref{alg:mod,alg:div} for an implementation of these functions.
+
+        \medskip
+
+      \item Words: $\mathbb N^* = \{v = (v_1,v_2,\ldots,v_k) \mid k,v_1,v_2,\ldots,v_k\in \mathbb N \}$.
+
+        \smallskip
+        \noindent
+        \textit{Supported functions}:
+        Let $v$ and $n$ be expressions of types $\mathbb N^*$ and $\mathbb N$, respectively:
+        \begin{indentline}
+          $\Len\colon \mathbb N^*\to\mathbb N$
+          \begin{indentline}
+            $\mid$\quad $\Len(v) = k$ where $v = (v_1,v_2,\ldots,v_k)$.
+          \end{indentline}
+
+          \smallskip
+          \noindent
+          $\Append\colon \mathbb N^* \times \mathbb N \to \mathbb N^*$
+          \begin{indentline}
+            $\mid$\quad $\Append(v,n) = (v_1,v_2,\ldots,v_k,n)$ where $v = (v_1,v_2,\ldots,v_k)$.
+          \end{indentline}
+        \end{indentline}
+
+        \smallskip
+        \noindent
+        \textit{Supported partial functions}:
+        Let $v$ and $n$ be expressions of types $\mathbb N^*$ and $\mathbb N$, respectively:
+        \begin{indentline}
+          \smallskip
+          \noindent
+          $\RemoveLast\colon \mathbb N^*\to \mathbb N^*$
+          \begin{indentline}
+            $\mid$\quad $\RemoveLast(v) = (v_1,v_2,\ldots,v_{k})$ where $v = (v_1,v_2,\ldots,v_k,v_{k+1})$ with $k\geq 0$;\\
+            \phantom{$\mid$\quad }for all other arguments, $\RemoveLast$ is not defined.
+          \end{indentline}
+
+          \smallskip
+          \noindent
+          $\Get\colon \mathbb N^* \times \mathbb N \to \mathbb N$
+          \begin{indentline}
+            $\mid$\quad $\Get(v,n) = v_n$ where $v = (v_1,v_2,\ldots,v_k)$ with $n\in\{1,2,\ldots,k\}$;\\
+            \phantom{$\mid$\quad }for all other arguments, $\Get$ is not defined.
+          \end{indentline}
+        \end{indentline}
+\end{itemize}
+
+\subsubsection{Methods}
+\algorithmstyle{plainruled}
+
+	\SetKwFunction{exampleFn}{functionName}
+
+In our language, a \emph{method} is a declaration of the form
+
+\begin{algorithm}[H]
+  \Fn{\exampleFn{$a_1\colon I_1$, $a_2\colon I_2$, \ldots, $a_k\colon I_k$} $O_1\times O_2 \times \cdots \times O_\ell$ } {
+    \tcp{method content goes here}
+  }
+\end{algorithm}
+
+\noindent
+where the values $k$ and $\ell$ are fixed constants for the function, each $a_i$ is an input argument of type $I_i \in \{\mathbb B, \mathbb N, \mathbb N^*\}$, and each $O_i \in \{\mathbb B, \mathbb N, \mathbb N^*\}$ is the type of an output argument.
+
+\begin{itemize}[leftmargin=2em]
+\item
+We use the word \emph{method} here to distinguish it from a mathematical function.
+In particular, a method can be seen as an implementation of a mathematical function or partial function.
+
+\item
+The input and output arguments for a method are always \textit{pass-by-value}.
+In particular, this means that if you pass an integer variable to a method, the that method only receives a copy of the value stored in that variable, i.e., our language does not support \textit{pass-by-reference}.
+\end{itemize}
+
+\noindent
+In an algorithm, exactly one method can be labelled as an \emph{entry method} as follows.
+
+\begin{algorithm}[H]
+  \MainFn{\exampleFn{$a_1\colon I_1$, $a_2\colon I_2$, \ldots, $a_k\colon I_k$} $O_1\times O_2 \times \cdots \times O_\ell$}{
+      \tcp{entry code goes here}
+  }
+\end{algorithm}
+
+\noindent
+This method corresponds to the partial function which is being implemented by the algorithm.
+
+\subsubsection{Variables}
+
+A variable can be declared as
+
+\begin{algorithm}[H]
+  \Assign{$\mathrm{variableName}\colon T$}{\textit{initialValue}}\EOL
+\end{algorithm}
+
+\noindent
+where $T \in \{\mathbb B,\mathbb N, \mathbb N^*\}$ is the type of the variable, and \textit{initialValue} is an expression of type $T$.
+
+\begin{remark}
+  We note here that we allow global variables.
+  That is, variables which are initialised before the entry method is called, and are available to all methods in the program. 
+\end{remark}
+
+You can then reassign the value of a variable as
+
+\begin{algorithm}[H]
+  \Reassign{$\mathrm{variableName}$}{\textit{updatedValue}}\EOL
+\end{algorithm}
+
+\noindent
+where \textit{updatedValue} is an expression with the same type as the variable.
+
+\begin{itemize}[leftmargin=2em]
+  \item
+    when you assign a value to a variable, the variable is assigned a copy of the value, i.e., our language does not support \emph{copy-by-reference}.
+
+  \item
+A variable is only available within the same scope, i.e., if a variable is declared within a `while' statement, `method' or `if' statement, then it can only be used within the body of that `while' statement, `method' or `if' statement.
+\item
+You cannot declare a variable with the same name as a variable which is currently available.
+\item You cannot reassign or use a variable before it is declared.
+\end{itemize}
+
+Notice from \cref{alg:div} that it is possible for a method to return more than one value.
+Thus, we must specify how to handle calling such a function as follows.
+
+Suppose that our program has a method with the signature
+\begin{center}
+  \textbf{fn} \divideFn{$n\colon\mathbb N$, $m\colon\mathbb N$} $\mathbb N\times \mathbb N$.
+\end{center}
+Then, we may obtain the output of this function as follows.
+
+\begin{algorithm}[H]
+  \Assign{$x\colon \mathbb N$}{$10$}\EOL
+  \Assign{$y\colon \mathbb N$}{$3$}\EOL
+  \tcp{the following will be used to capture the output of the method}
+  \Assign{$a\colon \mathbb N$}{$0$}\EOL
+  \Assign{$b\colon \mathbb N$}{$0$}\EOL
+  \tcp{make the computation}
+  \Reassign{$(a,b)$}{\divideFn{$x$, $y$}}\EOL
+\end{algorithm}
+
+\noindent
+If \divideFn is as in \cref{alg:div}, then after running the above code, the value of $a$ will be 3, and the value of $b$ will be $1$.
+You do not require this notation if the function has only one return type.
+
+\algorithmstyle{ruled}
+
+\subsubsection{Control Flow}
+
+Our programming language supports `while' loops, and `if' statements with optional `else' cases.
+Values are returned from a method using a `return' statement.
+
+\begin{itemize}
+  \item The test part of the `while' and `if' statements must contain an expression of type $\mathbb B$.
+  \item The values provided to a `return' statement must match the return types of the method.
+  \item A value for each return type must be provided to the return statement.
+  \item If a return statement is not reached in a method, then the method does not return, and thus the algorithm does not terminate.
+\end{itemize}
+
+\noindent
+Notice that our programming language does not support `for' statement or `switch' statements.
+These additional statements can always be replaced with `while' loops and `if' statements.
+
+\subsection{Computable and Recursively Enumerable Sets}\label{sec:re-sets}
+
+Let $S \subseteq T_1\times T_2\times\cdots \times T_k$ be a set where each $T_i \in \{\mathbb B, \mathbb N, \mathbb N^*\}$ is a type as in \cref{sec:fundamental-types}.
+Then, we have the following definitions.
+
+\begin{definition}
+  The set $S \subseteq T_1\times T_2\times\cdots \times T_k$ is \emph{computable} if there exists a computable function $f\colon T_1\times T_2\times\cdots \times T_k \to\mathbb B$ such that
+  \[
+    S = \{ (t_1,t_2,\ldots,t_k)\in T_1\times T_2\times\cdots \times T_k \mid f(t_1,t_2,\ldots,t_k)=\mathrm{true} \}.
+  \]
+  Notice that we require $f$ to be a function. That is, it must be defined for all inputs.
+\end{definition}
+
+We then have the following subtly different definition.
+
+\begin{definition}\label{def:re-set}
+  The set $S \subseteq T_1\times T_2\times\cdots \times T_k$ is \emph{recursively enumerable} if there exists a computable partial function $f\colon T_1\times T_2\times\cdots \times T_k \rightharpoonup\mathbb B$ such that
+  \[
+    S = \{ (t_1,t_2,\ldots,t_k)\in T_1\times T_2\times\cdots \times T_k \mid f(t_1,t_2,\ldots,t_k)=\mathrm{true} \}.
+  \]
+  Notice that we only require $f$ to be a partial function.
+  % In fact, it is not difficult to show that without loss of generality, we may assume that $ \mathrm{dom}(f) = S$.
+\end{definition}
+
+\begin{exercise}[\exerciseLevelEasy]
+  Prove that in \cref{def:re-set}, without loss of generality, $\mathrm{dom}(f) = S$. 
+\end{exercise}
+
+In \cref{sec:re-not-comp}, we will see that there exists a subset of $\mathbb N$ which is recursively enumerable but not computable.
+That is, a set where we can confirm membership, but not confirm non-membership.
+
+\subsection{Runtime Limits}\label{sec:runtime-limit}
+
+Notice that we can modify any algorithm such that it take in an additional parameter which puts a limit on the number of statements it is allowed to execute, and an additional output parameter to indicate whether this limit was reached.
+%
+% In \cref{sec:solvable-simple}, we said that we could `run two algorithms in parallel'.
+% We will now show that this is possible using simple modifications of algorithms as follows.
+For example, we can perform this modification to \cref{alg:div} and obtain \cref{alg:divLimited}.
+	\SetKwFunction{divideLimitedFn}{divWithLimit}
+	\SetKwFunction{subLimitedFn}{subtractWithLimit}
+
+  \begin{algorithm}[ht!]
+
+    \color{tolExtra}
+  \Assign{$\mathrm{count}\colon \mathbb N$}{$0$}\EOLComment{counts the number of statements executed}
+  \Assign{$\mathrm{gLimit}\colon \mathbb N$}{$0$}\EOLComment{this will contain the global limit}
+    \color{black}
+
+  \MainFn{\divideLimitedFn{$\color{tolExtra}\mathrm{limit}\colon \mathbb N,$ $n\colon\mathbb N$, $m\colon\mathbb N$} ${\color{tolExtra}\mathbb B \times\vphantom{\mathbb N}} \mathbb N\times \mathbb N$} {
+
+    \color{tolExtra}
+    \Reassign{$\mathrm{gLimit}$}{$\mathrm{limit}$}\EOLComment{set the global limit for later}
+    \color{black}
+
+    \def\CheckLimit{
+      \color{tolExtra}
+      \textbf{if (} $\mathrm{count}\geq \mathrm{gLimit}$ \textbf{) \{}
+        \textbf{return} $(\mathrm{false},0,0)$\textbf{\,\textbf{;} \} else \{}
+      $\mathrm{count}$ $\gets$ $\mathrm{count}+1$\textbf{\,\textbf{;} \}}\;
+      \color{black}
+    }
+
+		\uIf{$m = 0$}{
+      \CheckLimit
+      \Return $(\mathrm{true},\ 0,\ n)$\EOL
+		}\Else{
+      \CheckLimit
+			\Assign{$a\colon \mathbb N$}{$0$}\EOL
+      \CheckLimit
+			\Assign{$b\colon \mathbb N$}{$n$}\EOL
+      \CheckLimit
+
+			\While{$b \geq m$}{
+        \CheckLimit
+        \Reassign{$a$}{$a+1$}\EOL
+        \CheckLimit
+        \Reassign{$b$}{\subFn{$b$, $m$}}\EOL
+        \CheckLimit
+			}
+      \CheckLimit
+      \Return $(\mathrm{true},\ a,\ b)$\EOL
+		}
+	}
+
+    \def\CheckLimit{
+      \color{tolExtra}
+      \textbf{if (} $\mathrm{count}\geq \mathrm{gLimit}$ \textbf{) \{}
+        \textbf{return} $0$\textbf{\,\textbf{;} \} else \{}
+      $\mathrm{count}$ $\gets$ $\mathrm{count}+1$\textbf{\,\textbf{;} \}}\;
+      \color{black}
+    }
+
+  % \tcp{The following helper function\\
+  %     {}\ (1) does not terminate if a < b;\\
+  %     {}\ (2) computes and returns a-b otherwise}
+  \Fn{\subLimitedFn{$a\colon\mathbb N$, $b\colon\mathbb{N}$} $\mathbb N$} {
+    \Assign{$\mathrm{guess}\colon \mathbb N$}{$0$}\EOL
+    \CheckLimit
+    \While{$ a \neq (\mathrm{guess} + b) $}{
+    \CheckLimit
+      \Reassign{$\mathrm{guess}$}{$\mathrm{guess}+1$}\EOL
+    \CheckLimit
+    }
+    \CheckLimit
+    \Return{$\mathrm{guess}$}\EOL
+  }
+
+  \caption{Division with remainder algorithm{\color{tolExtra}, with runtime limit}\label{alg:divLimited}}
+\end{algorithm}
+
+\subsection{Parallelise Algorithms}\label{sec:parallel-algo}
+
+In \cref{sec:solvable-simple}, we talked about running algorithms in parallel.
+Suppose we care given two computable partial functions
+\begin{align*}
+  f_1\colon& I_1\times I_2\times\cdots\times I_k \rightharpoonup O_1 \times O_2 \times\cdots\times O_\ell 
+  \qquad
+  \text{and}
+  \\
+  f_2\colon& I_1\times I_2\times\cdots\times I_k \rightharpoonup O_1 \times O_2 \times\cdots\times O_\ell.
+\end{align*}
+Then, we may perform the modification as in \cref{sec:runtime-limit} to obtain computable functions
+\begin{align*}
+  f_1'\colon& \mathbb N \times I_1\times I_2\times\cdots\times I_k \to \mathbb B \times O_1 \times O_2 \times\cdots\times O_\ell 
+  \qquad
+  \text{and}
+  \\
+  f_2'\colon& \mathbb N \times I_1\times I_2\times\cdots\times I_k \to \mathbb B\times O_1 \times O_2 \times\cdots\times O_\ell.
+\end{align*}
+We can the run the partial functions $f_1$ and $f_2$ `in parallel' using as in the following algorithm.
+
+
+	\SetKwFunction{parallelFn}{parallelise}
+
+\begin{algorithm}[ht!]
+
+  \MainFn{\parallelFn{$a_1\colon I_1$, $a_2\colon I_2$, $\ldots$, $a_k\colon I_k$} $O_1 \times O_2 \times \cdots O_\ell$} {
+    \tcp{the following are used to store the output of $f'_1$ and $f'_2$}
+    \Assign{$\mathrm{status}\colon \mathbb B$}{$\mathrm{false}$}\EOL
+    \Assign{$b_1\colon O_1$}{$\mathrm{init}_1$}\EOLComment{initialise the variable to any valid value}
+    \Assign{$b_2\colon O_2$}{$\mathrm{init}_2$}\EOLComment{initialise the variable to any valid value}
+    \vdots
+    \Assign{$b_\ell\colon O_\ell$}{$\mathrm{init}_2$}\EOLComment{initialise the variable to any valid value}
+
+    \tcp{the following is the current limit on the number of evaluations}
+    \Assign{$\mathrm{currentLimit}\colon \mathbb N$}{$1$}\EOL
+
+    \While{$\mathrm{true}$}{
+      \tcp{see if limit is sufficient for $f_1'$}
+      \Reassign{$(\mathrm{status},b_1,b_2,\ldots,b_\ell)$}{$f'_1(\mathrm{currentLimit}, a_1,a_2,\ldots,a_k)$}\EOL
+      \textbf{if (} $\mathrm{status}$ \textbf{) \{ return } $(b_1,b_2,\ldots,b_\ell)$\,\textbf{; \}}\;
+
+      \tcp{see if limit is sufficient for $f_2'$}
+      \Reassign{$(\mathrm{status},b_1,b_2,\ldots,b_\ell)$}{$f'_2(\mathrm{currentLimit}, a_1,a_2,\ldots,a_k)$}\EOL
+      \textbf{if (} $\mathrm{status}$ \textbf{) \{ return } $(b_1,b_2,\ldots,b_\ell)$\,\textbf{; \}}\;
+
+      \tcp{we need to increase the limit}
+      \Reassign{$\mathrm{currentLimit}$}{$\mathrm{currentLimit}+1$}\EOL
+    }
+  }
+
+  \caption{Run $f_1$ and $f_2$ in parallel\label{alg:parallel}}
+\end{algorithm}
+
+\begin{exercise}[\exerciseLevelEasy]
+  Prove that the set $S\subseteq T_1\times T_2\times\cdots \times T_k$ is computable if both \[S\qquad \text{and}\qquad (T_1\times T_2\times\cdots \times T_k)\setminus S\] are recursively enumerable.
+\end{exercise}
+
+\subsection{Computable Word Problems}\label{sec:computable-wp}
+
+Suppose that we have a group $G$ with finite generating set $X$.
+We then fix an injective map $\varphi \colon X^{\pm 1}\to \mathbb N$ called an \emph{encoding}.
+We may then extend this to a monoid homomorphism $\varphi\colon (X^{\pm 1})^* \to \mathbb N^*$ such that
+\[
+  \varphi(w) \coloneqq (\varphi(w_1), \varphi(w_2),\ldots, \varphi(w_k)).
+\]
+From this, we have the following definition.
+
+\begin{definition}
+  The word problem for $G$ is computable if there exists a computable function $f\colon \mathbb N^* \to \mathbb B$ such that for each $w\in (X^{\pm 1})^*$, we have that $\overline{w} =_G 1$ if and only if $f(\Phi(w))= \mathrm{true}$.
+\end{definition}
+
+\subsubsection{Example: Free Group}
+Consider the free group $F_2 = \left\langle a,b|-\right\rangle$ with generating set $X = \{a,b\}$ and encoding $\varphi\colon (X^{\pm 1})\to \mathbb N$ defined as
+\begin{align*}
+  \varphi(a) &= 0, &
+  \varphi(b) &= 1,&
+  \varphi(a^{-1}) &= 2,&
+  \varphi(b^{-1}) &= 3.
+\end{align*}
+Then, we can solve the word problem for $F_X$ using \cref{alg:wp1}.
+
+\clearpage
+\SetKwFunction{freeWpFn}{rank2Free}
+\begin{algorithm}[H]
+	\caption{Word problem for $F_2$\label{alg:wp1}}
+
+\SetKwFunction{negateElementFn}{inverseOfElement}
+	\MainFn{\freeWpFn{$w\colon\mathbb N^*$} $\mathbb B$} {
+    \Assign{$\mathrm{reduced}\colon \mathbb N^*$}{$()$}\EOL
+    
+    \Assign{$\mathrm{index}\colon \mathbb N$}{$1$}\EOL
+    \While{$\mathrm{index} \leq \Len(w)$}{
+      \Assign%
+        {$\mathrm{current}\colon \mathbb N$}%
+        {$\Get(w,\ \mathrm{index})$}\EOL
+
+      \uIf{$\Len(\mathrm{reduced}) = 0$} {
+        \Reassign{$\mathrm{reduced}$}{$\Append(\mathrm{reduced},\ \mathrm{current})$}\EOL
+      }
+      \Else{
+        \Assign%
+          {$\mathrm{last}\colon \mathbb N$}%
+          {$\Get(\mathrm{reduced},\ \Len(\mathrm{reduced}))$}\EOL
+
+          \uIf{$\mathrm{last} = \negateElementFn(\mathrm{current})$}{
+            \Reassign{$\mathrm{reduced}$}{$\RemoveLast(\mathrm{reduced})$}\EOL
+          }
+          \Else{
+          \Reassign{$\mathrm{reduced}$}{$\Append(\mathrm{reduced},\ \mathrm{current})$}\EOL
+          }
+      }
+      \Reassign{$\mathrm{index}$}{$\mathrm{index} + 1$}\EOL
+    }
+    \Return $(\Len(\mathrm{reduced}) = 0)$\EOL
+	}
+
+  \tcp{computes the inverse an element encoded by $\varphi$}
+  \Fn{\negateElementFn{$e\colon \mathbb N$} $\mathbb N$} {
+    \uIf{$e = 0$} {
+      \Return{$2$}\EOL
+    }
+    \uElseIf{$e = 1$}{
+      \Return{$3$}\EOL
+    }
+    \uElseIf{$e = 2$}{
+      \Return{$0$}\EOL
+    }
+    \Else{
+      \Return{$1$}\EOL
+    }
+  }
+\end{algorithm}
+
+\subsection{All You Need are the Naturals}\label{sec:only-natural}
+
+So far we have defined computable (partial) functions which can have multiple input arguments and multiple outputs.
+In this section, we show that using various encodings, we can reduce any computation to one of the form $\mathbb N \rightharpoonup \mathbb N$.
+
+\subsubsection{Encodings}
+We encode booleans values using the function $\mathrm{encode}_{\mathbb{B}}\colon \mathbb B \to \mathbb N$ defined as
+\[
+  \mathrm{encode}_{\mathbb B} (\mathrm{true}) = 0,
+  \qquad
+  \mathrm{encode}_{\mathbb B} (\mathrm{false}) = 1.
+\]
+We encode words using the function $\mathrm{encode}_{\mathbb N^*}\colon \mathbb N^* \to \mathbb N$ defined as
+\[
+  \mathrm{encode}_{\mathbb N^*}(v_1,v_2,\ldots ,v_k)
+  =
+  2^k 3^{v_1} 5^{v_2} 7^{v_3} 11^{v_4}\cdots p_{k}^{v_{k-1}} p_{k+1}^{v_k} 
+\]
+where $p_i$ is the $i$-th prime number for each $i$.
+
+\begin{exercise}[\exerciseLevelEasy]\label{ex:prove-inj-of-encoding}
+  Prove that $\mathrm{encode}_{\mathbb{B}}\colon \mathbb B \to \mathbb N$ and  $\mathrm{encode}_{\mathbb N^*}\colon \mathbb N^* \to \mathbb N$ are injective.
+\end{exercise}
+
+\subsubsection{Decoding}
+
+We denote the ranges of the functions
+$\mathrm{encode}_{\mathrm B}$ and
+$\mathrm{encode}_{\mathbb N^*}$ as
+\[
+  \mathrm{encode}_{\mathrm B}(\mathbb B) = \{0,1\}
+  \qquad
+  \text{and}
+  \qquad
+  \mathrm{encode}_{\mathbb N^*}(\mathbb N^*) = \{
+      \mathrm{encode}_{\mathbb N^*}(v)
+      \mid
+      v\in \mathbb N^*
+  \}.
+\]
+From \cref{ex:prove-inj-of-encoding} we know that
+$\mathrm{encode}_{\mathrm B}$ and
+$\mathrm{encode}_{\mathbb N^*}$ are injective, thus by definition there exists partial functions
+$\mathrm{decode}_{\mathrm B}\colon \mathbb N \rightharpoonup \mathbb B$ and
+$\mathrm{decode}_{\mathbb N^*}\colon \mathbb N \rightharpoonup \mathbb N^*$ with domains
+\[
+  \mathrm{dom}(\mathrm{decode}_{\mathbb B}) = \mathrm{encode}_{\mathbb B}(\mathbb B)
+  \qquad
+  \text{and}
+  \qquad
+  \mathrm{dom}(\mathrm{decode}_{\mathbb N^*}) = \mathrm{encode}_{\mathbb N^*}(\mathbb N^*),
+\]
+such that 
+\[
+  \mathrm{decode}_{\mathbb B}\circ \mathrm{encode}_{\mathbb B}\colon \mathbb B \to \mathbb B
+  \qquad\text{and}\qquad
+  \mathrm{decode}_{\mathbb N^*}\circ \mathrm{encode}_{\mathbb N^*}\colon \mathbb N^* \to \mathbb N^*
+\]
+are the identity functions on $\mathbb B$ and $\mathbb N^*$, respectively.
+
+\subsubsection{Computability}
+
+The encodings and decodings as defined above have the following properties.
+
+\begin{proposition}\label{prop:encodeing-as-nats}
+  All of the following hold:
+  \begin{enumerate}
+    \item The functions $\mathrm{encode}_{\mathbb B}\colon \mathbb B\to\mathbb N$ and $\mathrm{encode}_{\mathbb N^*}\colon\mathbb N^*\to\mathbb N$ are computable;
+    \item The sets $\mathrm{encode}_{\mathbb B}(\mathbb B)\subset \mathbb N$ and $\mathrm{encode}_{\mathbb N^*}(\mathbb N^*)\subset \mathbb N$ are computable; and
+    \item The partial functions $\mathrm{decode}_{\mathbb B}\colon \mathbb N\rightharpoonup\mathbb B$ and $\mathrm{decode}_{\mathbb N^*}\colon \mathbb N \rightharpoonup \mathbb N^*$ are computable.
+  \end{enumerate}
+\end{proposition}
+
+\begin{exercise}[\exerciseLevelMedium]
+  Prove \cref{prop:encodeing-as-nats}.
+\end{exercise}
+
+\subsubsection{Encoding Function Arguments}
+
+From these encodings, we have the following lemma.
+
+\begin{lemma}\label{lem:reduction-in-complex}
+  Let $f\colon I_1\times I_2 \times\cdots I_k \rightharpoonup O_1\times O_2 \times \cdots \times O_\ell$ be a computable partial function where each $I_i,O_i \in \{\mathbb B, \mathbb N, \mathbb N^*\}$.
+  There exists a computable partial function $g\colon \mathbb N\to\mathbb N$ so that
+  \begin{align*}
+    f(a_1,&a_2,\ldots,a_k)\\
+      =
+      \Big(
+        &
+          \mathrm{decode}_{O_1}(\Get(
+              g(\mathrm{encode}_{\mathbb N^*}(
+                \mathrm{encode}_{I_1}(a_1),
+                \mathrm{encode}_{I_2}(a_2),
+                \ldots,
+                \mathrm{encode}_{I_k}(a_k)
+              ))
+        ,\ 1)),
+        \\
+        &
+          \mathrm{decode}_{O_2}(\Get(
+              g(\mathrm{encode}_{\mathbb N^*}(
+                \mathrm{encode}_{I_1}(a_1),
+                \mathrm{encode}_{I_2}(a_2),
+                \ldots,
+                \mathrm{encode}_{I_k}(a_k)
+              ))
+        ,\ 2)),
+        \\
+        &\vdots
+        \\
+        &
+          \mathrm{decode}_{O_\ell}(\Get(
+              g(\mathrm{encode}_{\mathbb N^*}(
+                \mathrm{encode}_{I_1}(a_1),
+                \mathrm{encode}_{I_2}(a_2),
+                \ldots,
+                \mathrm{encode}_{I_k}(a_k)
+              ))
+        ,\ \ell))
+        \Big).
+    \end{align*}
+    That is, using the encodings, we transform a computation of $f$ to a computation involving a function of the form $g\colon \mathbb N \rightharpoonup \mathbb N$.
+    Thus, our computational model does not lose any power if we restrict our entry methods to be partial functions of the form $\mathbb N \to\mathbb N$.
+\end{lemma}
+\begin{exercise}[\exerciseLevelEasy]
+  Prove \cref{lem:reduction-in-complex}.
+\end{exercise}
+
+\subsection{Universality}
+
+A fundamental theorem in the theory of computability is that of the existence of universal computability.
+This theorem says that there is a computable (partial) function which can perfectly emulate any other computable partial function.
+
+\begin{theorem}[Universal computability]\label{thm:universality}
+	There is a computable partial function $\mathfrak U\colon \mathbb N\times \mathbb N \rightharpoonup \mathbb N$ such that for each computable partial function of the form $f\colon \mathbb N \rightharpoonup \mathbb N$, there is a positive integer $N_f\in \mathbb N$ for which $\mathfrak U(N_f, \cdot) = f(\cdot)$.
+  We then call such a partial function \emph{universal}, and we call the integer $N_f$ the \emph{compiled code} for the partial function $f$.
+\end{theorem}
+
+The proof of the above theorem is beyond the scope of this talk.
+
+\begin{exercise}[\exerciseLevelVeryHard]
+  Prove \cref{thm:universality}. \textit{(Hint: use the encodings in \cref{sec:only-natural} to encode a parse tree and symbol table of a given algorithm; in particular, notice that you can iterate the encoding $\mathrm{encode}_{\mathbb N^*}\colon \mathbb N^*\to\mathbb N$ to encode finite trees.)}
+\end{exercise}
+
+\smallskip
+
+\begin{remark}
+  From \cref{lem:reduction-in-complex}, we see that, in some way, \cref{thm:universality} captures every computable partial function.
+\end{remark}
+
+\subsection{Recursively Enumerable but not Computable}\label{sec:re-not-comp}
+
+Let $\underline{\mathrm{Halting}}\subset \mathbb N$ be the set defined as
+\[
+  \underline{\mathrm{Halting}}
+  \coloneqq
+  \{
+    n\in \mathbb N \mid (n,n)\in \mathrm{dom}(\mathfrak U)
+  \}
+\]
+where $\mathfrak U\colon \mathbb N \times \mathbb N\rightharpoonup \mathbb N$ is a universal partial function as in \cref{thm:universality}.
+That is, $\underline{\mathrm{Halting}}$ describes the set of computations which eventually terminate when given their own compiled code as input.
+
+We then have the following easy lemma.
+
+\begin{lemma}\label{lem:Halt-is-re}
+  The set $\underline{\mathrm{Halting}}\subset \mathbb N$ is recursively enumerable.
+\end{lemma}
+
+\begin{exercise}[\exerciseLevelEasy]
+  Prove \cref{lem:Halt-is-re}.
+  You may assume that your program has a method which implements a universal function $\mathfrak U\colon \mathbb N\times \mathbb N \rightharpoonup \mathbb N$ as in \cref{thm:universality}.
+\end{exercise}
+
+We now have the following somewhat surprising fact.
+
+\begin{proposition}\label{prop:re-but-not-comp}
+  The set $\underline{\mathrm{Halting}}\subset \mathbb N$ is recursively enumerable but not computable.
+\end{proposition}
+
+\begin{myproof}
+  The fact that $\underline{\mathrm{Halting}}$ is recursively enumerable was shown in \cref{lem:Halt-is-re}.
+
+  Suppose for contradiction that the set $\underline{\mathrm{Halting}}$ is computable.
+  Then, by definition, there must exist a computable function $H\colon \mathbb N \to \mathbb B$ such that $H(n) =\mathrm{true}$ if and only if $n\in \underline{\mathrm{Halting}}$.
+
+Now define the partial function $C\colon \mathbb N \rightharpoonup \mathbb N$
+\[
+  C(n)
+  \coloneqq
+  \begin{cases}
+    \text{\textit{undefined}} & \text{if }H(n) = \mathrm{true},\\
+    0 &\text{otherwise}.
+  \end{cases}.
+\]
+Since $H\colon \mathbb N \to \mathbb B$ is computable, then so is the partial function $C\colon \mathbb N\rightharpoonup \mathbb N$.
+Since $C$ is computable, we may define $N_{C}$ to be the compiled code for the partial function $C\colon \mathbb N \rightharpoonup \mathbb N$.
+
+We are now interested in finding the value of $H(N_C)$:
+\begin{itemize}
+\item
+  Suppose that $H(N_C) = \mathrm{true}$.
+  From the definition of $C$, we would then have that $C(N_C)$ is undefined.
+  Thus, from the definition of $H$, it would then follow that $H(C_N) = \mathrm{false}$.
+  Hence, by contradiction, $H(N_C) \neq \mathrm{true}$.
+
+\item
+  Suppose that $H(N_C) = \mathrm{false}$.
+  From the definition of $C$, we would then have that $C(N_C) = 0$.
+  Thus, from the definition of $H$, it would then follow that $H(C_N) = \mathrm{true}$.
+  Hence, by contradiction, $H(N_C) \neq \mathrm{false}$.
+\end{itemize}
+We now conclude that $H(N_C)$ cannot be defined.
+This contradicts our earlier assumption that $H$ is a computable function.
+We thus conclude that the set $\underline{\mathrm{Halting}}$ is not computable.
+\end{myproof}
+
+\section{Van Kampen Diagrams and their Properties}
+
+ In this section, we introduce and study \emph{van Kampen diagrams} using only terminology from basic graph theory.
+We begin with a weaker definition which we call a \emph{diagram} as follows.
+
+\begin{definition}\label{def:diagram}
+  Let $X$ be the generating set for a free group $F_X$.
+Then, a \emph{diagram over $X$}, denoted $\mathcal D = (\Gamma,v)$, is a finite connected planar multigraph $\Gamma$ for which
+\begin{enumerate}
+	\item each edge is labelled with a generator from $X^{\pm 1}$, here each edge has a direction where an edge of the form $u\to^{x} v$ is equivalent to an edge $u\leftarrow^{x^{-1}} v$ for each $x\in X^{\pm 1}$;
+	\item the graph has a chosen vertex $v$ which is adjacent to the boundary face of the graph;
+  \item if a vertex has edge-degree 1, then it is $v$; and
+  \item every compact face of the graph is a polygon, that is, the boundary of the face is a cycle which does not repeat edges or vertices (except for the final and inital vertex).
+\end{enumerate}
+We refer to the vertex $v$ as the \emph{root} of the graph.
+\end{definition}
+
+In \cref{fig:diagram}, We give an example of a diagram over $X=\{a,b\}$.
+
+\begin{figure}[ht!]
+	\centering
+  \includegraphics[scale=0.9]{figures/vanKampenDiagram}
+	\caption{Diagram over $X = \{a,b\}$.}\label{fig:diagram}
+\end{figure}
+
+\begin{exercise}[\exerciseLevelEasy]
+  Prove that neither of the following is a diagram over $X = \{a,b\}$.
+
+  {
+    \hfill
+    \includegraphics{figures/vanKampenDiagramNope1}
+    \hfill
+    \includegraphics{figures/vanKampenDiagramNope2}
+    \hfill
+  }
+
+\end{exercise}
+
+\subsection{Boundaries}
+
+We then have the following definition for the boundary a diagram as follows.
+
+\begin{definition}\label{def:boundary-of-diagram}
+Let $\mathcal D = (\Gamma, v)$ be a diagram over $X$, as in \cref{def:diagram}.
+Then, $\partial_{\circlearrowleft} \mathcal D$ is the word in $(X^{\pm 1})^*$ on the boundary of the diagram read counter-clockwise, starting at the root $v$.
+\end{definition}
+
+\begin{example}
+Let $\mathcal D$ be the diagram in \cref{fig:diagram}, then \[\partial_{\circlearrowleft} \mathcal D = aaabaaba^{-1}b^{-1}a^{-1}ba^{-1}a^{-1}b^{-1}b^{-1}aba^{-1}b^{-1}a^{-1}.\]
+\end{example}
+
+We can then form a similar definition for the compact faces of a diagram as follows.
+
+\begin{definition}\label{def:boundary-of-face}
+  Let $\mathcal F$ be a compact face of diagram $\mathcal D$, and let $u$ be a vertex on the face $\mathcal F$.
+  \begin{itemize}[leftmargin=2em]
+    \item $\partial_{\circlearrowleft} (\mathcal F,u)$ is a counter-clockwise reading of the boundary of $\mathcal F$ starting at $u$; and
+    \item $\partial_{\circlearrowright} (\mathcal F,u)$ is a clockwise reading of the boundary of $\mathcal F$ starting at $u$.
+  \end{itemize}
+\end{definition}
+
+\begin{example}
+  For the diagram given in \cref{fig:diagram-labeled}, we have
+  \[
+    \partial_{\circlearrowleft} (\mathcal F_4,u) = b^{-1}a b a^{-1}
+    \qquad\text{and}\qquad
+    \partial_{\circlearrowright} (\mathcal F_4,u) =ab^{-1}a^{-1}b.
+  \]
+\end{example}
+
+\begin{figure}[ht!]
+	\centering
+  \includegraphics{figures/vanKampenDiagramLabelledMarked}
+	\caption{Labelled diagram over $X = \{a,b\}$.}\label{fig:diagram-labeled}
+\end{figure}
+
+\subsection{Van Kampen Diagrams}
+We are now ready to define \emph{van Kampen diagrams} as follows.
+
+\begin{definition}\label{def:van-kampen}
+  Let $P = \left\langle X \mid R\right\rangle$ be a finite presentation such that
+  \begin{enumerate}[leftmargin=2em]
+    \item\label{def:van-kampen/1} each $w\in R$ is \textit{cyclically reduced}, i.e., $w$ and each of its cyclic permutations are freely reduced.
+  \end{enumerate}
+  We then write $R^\circ$ for the smallest set of words in $X^*$ such that
+  \begin{enumerate}[leftmargin=2em]\setcounter{enumi}{1}
+    \item\label{def:van-kampen/2} $R\subseteq R^\circ$;
+    \item\label{def:van-kampen/3} $R^\circ$ is closed under taking inverses (in the group $F_X$); and
+    \item\label{def:van-kampen/4} $R^\circ$ is closed under taking cyclic permutations.
+  \end{enumerate}
+  Clearly, the set $R^\circ$ is well-defined and finite. From this, we have the following definition.
+
+  \hrulefill
+
+  A \emph{van Kampen diagram over $P$} is a diagram $\mathcal D = (\Gamma,v)$ over $X$ where
+  \begin{itemize}[leftmargin=2em]
+    \item the boundary word $w = \partial_{\circlearrowleft} \mathcal D$ is freely reduced; and
+    \item for each pair $(\mathcal F,u)$, as in \cref{def:boundary-of-face}, we have $\partial_{\circlearrowleft} (\mathcal F,u)\in R^\circ$ and $\partial_{\circlearrowright} (\mathcal F,u) \in R^\circ$.
+    \end{itemize}
+\end{definition}
+\begin{example}
+  \Cref{fig:diagram} is a van Kampen diagram over $P = \left\langle a,b \mid aba^{-1}b^{-1} \right\rangle$.
+\end{example}
+\begin{exercise}[\exerciseLevelEasy]
+  Prove that condition (\ref{def:van-kampen/1}) in \cref{def:van-kampen} does not restrict the class of groups to which we can apply this definition (i.e., you can always modify the set of relators such that this condition is met, and the same group is presented).
+
+  \smallskip
+
+  Let $P = \left\langle X\mid R\right\rangle$ be a finite presentation as in \cref{def:van-kampen}.
+  Prove that there always exists a well-defined finite set $R^\circ$ which satisfies conditions (\ref{def:van-kampen/2}), (\ref{def:van-kampen/3}) and (\ref{def:van-kampen/4}) in \cref{def:van-kampen}
+\end{exercise}
+
+\subsection{Decomposing van Kampen Diagrams}\label{sec:van-kampen-decomp}
+
+In this section, we describe a process of decomposing a van Kampen diagram into a diagram of a form known as a \emph{bouquet of lollipops}.
+Moreover, the boundary word of this new diagram will be equal to the boundary word of the van Kampen diagram, up to free reduction; and the two diagrams will share the same compact faces.
+
+Here, a diagram is called a \emph{lollipop} if it contains a single compact face which is connected to the root by a path, called the \emph{stem} of the lollipop, as in \cref{fig:lollipop}.
+A \emph{bouquet of lollipops} is then a union of finitely many lollipop diagrams joined at the root vertex as in \cref{fig:diagram4}.
+
+\begin{figure}[ht!]
+	\centering
+	\includegraphics{figures/lollipop}
+	\caption{A lollipop diagram.}\label{fig:lollipop}
+\end{figure}
+
+In this section, we decompose the van Kampen diagram given in \cref{fig:diagram-labeled} into the bouquet of lollipops given in \cref{fig:diagram4}.
+To generate such a diagram, we repeat the following procedure:
+\begin{enumerate}
+  \item Select a compact face $\mathcal F$ which is not a part of a lollipop and shares an edge with the boundary face (note that if no such face exists, then you have a bouquet of lollipops).
+  \item Travelling counter-clockwise around the boundary of the diagram, select the longest sub-path $m$ of the boundary that starts at root and can be decomposed as $m = pq$ where
+    \begin{enumerate}
+      \item the path $m$ does not repeat any vertices (except for the first and last if it's a cycle);
+      \item $p = p_1p_2\cdots p_k$ does not contain any edges which are a part of $\mathcal F$; and
+      \item $q=c_1 c_2\cdots c_i$ only contains edges of $\mathcal F$.
+    \end{enumerate}
+    We see that the path $m$ is well-defined and the factor $q$ is non-empty.
+  \item\label{item:creating-lollipops} Delete the path $q$ from the diagram; then repeatedly delete vertices which are not the root and have edge-degree 1; then add the lollipop as in \cref{fig:lollipop} to the diagram in such a way that the boundary word of the resulting diagram is equivalent to the boundary word of the original diagram, up to free reduction.
+\end{enumerate}
+At the moment, it might not be clear that part (\ref{item:creating-lollipops}) of the above procedure is well-defined.
+To assist with this, we provide an example of this process as follows.
+
+\subsubsection{Example}
+
+Beginning with the van Kampen diagram given in \cref{fig:diagram-labeled}, then selecting the compact face $\mathcal F_1$ we obtain the replacement as in \cref{fig:diagram2}.
+
+\begin{figure}[ht!]
+	\centering
+	\begin{minipage}{.4\linewidth}
+    \includegraphics[scale=0.85]{figures/vanKampenDiagramLabelled}
+		\hfill
+	\end{minipage}
+	~{\Large$\leadsto$}~
+	\begin{minipage}{.4\linewidth}
+		\hfill
+    \includegraphics[scale=0.85]{figures/vanKampenDiagramLabelled2}
+	\end{minipage}
+	\caption{A diagram over $X = \{a,b\}$.}\label{fig:diagram2}
+\end{figure}
+
+We repeat this procedure by selecting the face $\mathcal F_2$ to obtain the diagram in \cref{fig:diagram3}.
+
+\begin{figure}[ht!]
+	\centering
+  \includegraphics[scale=0.85]{figures/vanKampenDiagramLabelled3}
+	\caption{A diagram over $X = \{a,b\}$.}\label{fig:diagram3}
+\end{figure}
+
+Continuing this process for faces $\mathcal F_3$, $\mathcal F_4$ and $\mathcal F_5$ (in that order), we obtain the bouquet of lollipops in \cref{fig:diagram4}  which has the same boundary word as \cref{fig:diagram-labeled}, up to free reduction.
+
+\begin{figure}[ht!]
+	\centering
+  \includegraphics[scale=0.85]{figures/vanKampenDiagramLabelled4}
+	\caption{Decomposition of a diagram over $X = \{a,b\}$.}\label{fig:diagram4}
+\end{figure}
+
+\begin{exercise}[\exerciseLevelMedium]
+  Perform the same decomposition for the following van Kampen diagram.
+  
+  \begin{center}
+	  \includegraphics{figures/vanKampenDiagramSimple}
+  \end{center}
+\end{exercise}
+
+\subsection{Properties of the Decomposition}
+
+From a careful analysis of the decomposition procedure described in \cref{sec:van-kampen-decomp}, we have the following results.
+
+\begin{lemma}\label{lem:diagram-size}
+  Suppose that $\mathcal D = (\Gamma,v)$ is a diagram with boundary word $w = \partial_\circlearrowleft \mathcal D$ and compact faces $\mathcal F_1, \mathcal F_2,\ldots,\mathcal F_n$, each of which having a boundary word $r_i = \partial_\circlearrowleft (\mathcal F_i, q_i)$ where each $q_i$ is a fixed vertex of $\mathcal F_i$.
+  Then, the diagram $\mathcal D$ has precisely
+  $
+      \left(
+        |w| + \sum_{i=1}^n |r_i|
+      \right)/2
+  $
+  edges.
+\end{lemma}
+
+\begin{myproof}
+Notice that each edge has two sides.
+Each such side is either adjacent to some $\mathcal F_i$ and is thus counted by $|r_i|$, or is adjacent to the non-compact face, and is thus counted by $|w|$.
+In fact, we see that $|w|+\sum_{i=1}^n |r_i|$ is a double count of the edges of $\mathcal D$.
+\end{myproof}
+
+\begin{lemma}\label{lem:diagram-decomp}
+	Let $\mathcal D = (\Gamma, v)$ be a diagram over $X$ with $n$ compact faces, and let $w = \partial_\circlearrowleft \mathcal D$ be the boundary word of the diagram.
+  Then, there exists an enumeration of the compact faces $\mathcal F_1, \mathcal F_2,\ldots, \mathcal F_n$ and a choice of words $u_1,u_2,\ldots,u_n\in (X^{\pm 1})^*$ such that
+	\[
+		w
+		=_{G}
+		\prod_{i=1}^{n}
+    u_i r_i u_{i}^{-1}
+	\]
+  where
+     each $|u_j|\leq (|w|+\sum_{i=1}^n |r_i|)/2$;
+     and each $r_i  = \partial_{\circlearrowleft} \mathcal (\mathcal F_i,s_i)$ where $s_i$ is a vertex of $\mathcal F_i$.
+\end{lemma}
+
+\begin{myproof}
+Let $\mathcal D$ be a diagram as in the lemma statement.
+Then, after following the procedure detailed in \cref{sec:van-kampen-decomp}, we end up with a bouquet of lollipops $\mathcal B$ as in \cref{fig:bouquet-of-lollipops}.
+
+\begin{figure}[ht!]
+	\centering
+  \includegraphics[scale=0.95]{figures/bouquetOfLollipops}
+	\caption{A bouquet of lollipops.}\label{fig:bouquet-of-lollipops}
+\end{figure}
+
+Let each $u_i\in (X^{\pm 1})^*$ be the word which labels the path from the root to the vertex $s_i$.
+That is, $u_i$ labels the stem of the lollipop with face $\mathcal F_i$.
+From the procedure in \cref{sec:van-kampen-decomp}, we see that $|u_i|$ is bounded by the number of edges in $\mathcal D$.
+Thus, our lemma follows from \cref{lem:diagram-size}.
+\end{myproof}
+
+\begin{proposition}\label{prop:van-kampen-decomp}
+	Let $\mathcal D = (\Gamma, v)$ be a van Kampen diagram over $P = \left\langle X\mid R\right\rangle$ with $n$ compact faces, and let $w = \partial_\circlearrowleft P$ be the boundary word of the diagram.
+  Then, there exists an enumeration of the compact faces $\mathcal F_1, \mathcal F_2,\ldots, \mathcal F_n$ and a choice of words $u_1,u_2,\ldots,u_n\in (X^{\pm 1})^*$ such that
+	\[
+		w
+		=_{F_X}
+		\prod_{i=1}^{n}
+    u_i r_i^{\varepsilon_i} u_{i}^{-1}
+	\]
+  where
+    each $\varepsilon_i\in \{-1,1\}$;
+     each $|u_j|\leq |w|+\sum_{i=1}^n |r_i|$;
+     and each $r_i \in R$ such that there exists some vertex $q_i$ on the face $\mathcal F_i$ such that either $r_i =\partial_\circlearrowleft (\mathcal F_i, q_i)$ or $r_i =\partial_\circlearrowright (\mathcal F_i, q_i)$.
+  Thus, as a corollary, we find that the word $w$ is trivial in the group with presentation $P$.
+\end{proposition}
+
+\begin{myproof}
+  From \cref{lem:diagram-decomp}, we see that there is an ordering of the faces $\mathcal F_1, \mathcal F_2,\ldots,\mathcal F_n$ for which
+	\[
+		w
+		=_{F_X}
+		\prod_{i=1}^{n}
+    u_i r_i u_{i}^{-1}
+	\]
+  where
+     each $|u_j|\leq (|w|+\sum_{i=1}^n |r_i|)/2$;
+     and each $r_i  = \partial_{\circlearrowleft} \mathcal (\mathcal F_i,s_i)$ where $s_i$ is a vertex of $\mathcal F_i$.
+
+    From the decomposition procedure described in \cref{sec:van-kampen-decomp}, and the definition of van Kampen diagrams, we see that each $r_i \in R^\circ$.
+  Now, from the definition of $R^\circ$ in \cref{def:van-kampen} and the boundary of a face, there must exist some vertex $q_i$ in each $\mathcal F_i$ such that we have a word $r_i'\in R$ with $|r_i|=|r_i'|$, and either $r'_i = \partial_\circlearrowleft (\mathcal F_i, q_i)\in R$ or $r_i' = \partial_\circlearrowright (\mathcal F_i, q_i)\in R$.
+  Hence, there exists some $\varepsilon_i \in \{-1,1\}$ and some word $c_i \in (X^{\pm 1})^*$ with length $|c_i|\leq |r_i|$ such that
+  \[
+    r'_i =_{F_X} c_i r_i^{\varepsilon_i}\, c_i^{-1} \in R.
+  \]
+  Now, let each $u_i' = u_i c_i$, then we see that
+  \[
+    w
+		=_{F_X}
+		\prod_{i=1}^{n}
+    u_i' (r'_i)^{\varepsilon_i} (u'_{i})^{-1}
+  \]
+  where each
+  \[
+    |u_i'|\leq |u_i|+|c_i| \leq \frac{|w|+\sum_{i=1}^n |r_i|}{2} + |r_i|
+    =
+    \frac{|w|+\sum_{i=1}^n |r'_i|}{2} + |r'_i|
+    .
+  \]
+  From \cref{lem:diagram-size}, we see that $|r_i|\leq (|w|+\sum_{i=1}^n |r_i|)/2$, and thus,
+  \[
+    w
+		=_{F_X}
+		\prod_{i=1}^{n}
+    u_i' (r'_i)^{\varepsilon_i} (u'_{i})^{-1}
+  \]
+  where $|u_i'| \leq |w|+\sum_{i=1}^n |r_i'|$ for each $i$.
+  Thus, after relabelling we have our desired result.
+\end{myproof}
+
+
+\subsection{Constructing van Kampen Diagrams}\label{sec:van-kampen-construct}
+
+From \cref{prop:van-kampen-decomp}, we see that the boundary word of any van Kampen diagram over $P$ is a freely reduced word which is the identity in the group with presentation $P$.
+In this section, we prove the inverse of this statement: that for each freely reduced word $w$ which is the identity in the group presented by $P$, there exists a van Kampen diagram over $P$ with boundary word $w$.
+
+Let $P = \left\langle X\mid R\right\rangle$ be a finite presentation as in \cref{def:van-kampen}.
+Then, we then see that for each freely reduced word $w \in (X^{\pm 1})^*$ in the word problem of $P$, there exists an $n$ for which 
+\begin{equation}\label{eq:tirivial-word}
+  w
+  =_{F_X}
+  \prod_{n=1}^n
+  u_i r_i^{\varepsilon_i} u_i^{-1}
+\end{equation}
+where each $u_i \in (X^{\pm 1})^*$ is freely reduced, each $r_i \in R$ and each $\varepsilon_i \in \{-1,1\}$.
+
+We then see that we can write the right-hand side of (\ref{eq:tirivial-word}) as the boundary of a bouquet of $n$ lollipops in which the $i$-th lollipop has its stem labelled by the freely reduced word $u_i$, and its face labelled by the cyclically reduced word $r_i$.
+Such a bouquet is a diagram over $X$.
+
+We then construct a van Kampen diagram over $P$ by repeating the following procedure.
+
+\subsubsection{Replacement Procedure}
+Let $\mathcal D = (\Gamma, v)$ be a diagram over $X$ where the boundary word of each compact face is a cyclically reduced word.
+\begin{enumerate}
+  \item If the boundary word $\partial_{\circlearrowleft}\mathcal D$ is freely reduced, then $\mathcal D$ is a van Kampen diagram.
+  \item Otherwise, the path corresponds to the boundary word $\partial_{\circlearrowleft}\mathcal D$ contains a subpath of the form $q \leftarrow^{x} r \to^x s$ for some $x\in X^{\pm 1}$:
+    \begin{enumerate}
+      \item If $q \neq s$, then we can `fold' the diagram such that the vertices $q$ and $s$ are identified, and the edges $r \to^x q$ and $r \to^x s$ are identified.
+
+        \smallskip
+
+        \begin{example}
+          We have the following example of such a replacement.
+
+          \smallskip
+
+          \begin{center}
+          \begin{minipage}{.4\linewidth}
+            \centering
+            \includegraphics{figures/constructionExample1}%
+          \end{minipage}
+          ~{\Large$\leadsto$}~
+          \begin{minipage}{.4\linewidth}
+            \centering
+            \includegraphics{figures/constructionExample1Replacement}%
+          \end{minipage}
+          \end{center}
+        
+        \end{example}
+        
+        \smallskip
+
+      \item Otherwise $q = s$, and thus $q \leftarrow^{x} r \to^x s$ is a bigon which we delete from the diagram.
+        We then repeatedly remove vertices which are not the root and have edge-degree 1.
+
+        \smallskip
+
+        \begin{example}
+          We have the following example of such a replacement.
+
+          \smallskip
+
+          \begin{center}
+          \begin{minipage}{.3\linewidth}
+            \centering
+            \includegraphics{figures/constructionExample2Part1}%
+          \end{minipage}
+          ~{\Large$\leadsto$}~
+          \begin{minipage}{.2\linewidth}
+            \centering
+            \includegraphics{figures/constructionExample2Part2}%
+          \end{minipage}
+          ~{\Large$\leadsto$}~
+          \begin{minipage}{.2\linewidth}
+            \centering
+            \includegraphics{figures/constructionExample2Part3}%
+          \end{minipage}
+          \end{center}
+        
+        \end{example}
+    \end{enumerate}
+    \noindent
+    After such a replacement we have a diagram with fewer edges and vertices.
+\end{enumerate}
+
+\begin{exercise}[\exerciseLevelHard]\label{ex:van-kampen-construct}
+Prove that the above process is
+\begin{itemize}
+  \item well-defined; \item eventually terminates; \item at every step we have a diagram over $X$; \item in each step of this process, the boundary word stays the same up to free reduction; and \item this process eventually leads to a van Kampen diagram.
+\end{itemize}
+\end{exercise}
+
+\subsection{Properties of our Construction}
+
+From \cref{ex:van-kampen-construct}, we have the following result.
+
+\begin{lemma}\label{lem:van-kampen-construct}
+  Let $P = \left\langle X\mid R \right\rangle$ be a finite presentation as in \cref{ex:van-kampen-construct}.
+  Then, for each freely reduced word $w\in (X^{\pm 1})^*$ in the word problem for $P$, in particular,
+	\[
+		w
+		=_{F_X}
+		\prod_{i=1}^{n}
+    u_i r_i^{\varepsilon_i} u_{i}^{-1}
+	\]
+  where
+  each $\varepsilon_i\in \{-1,1\}$, each $r_i \in R$, and each $u_i\in (X^{\pm 1})^*$.
+  Then, there exists a van Kampen diagram over $P$ which has $w$ as a boundary word and at most $n$ compact faces.
+\end{lemma}
+\begin{exercise}[\exerciseLevelMedium]
+  Prove \cref{lem:van-kampen-construct} using the result of \cref{ex:van-kampen-construct}.
+\end{exercise}
+
+We then have the following result.
+
+\begin{proposition}[van Kampen lemma]\label{prop:van-kampen-lemma}
+  Let $P = \left\langle X\mid R \right\rangle$ be a finite presentation as in \cref{ex:van-kampen-construct}.
+  Then, a word $w\in (X^{\pm 1})^*$ is in the word problem if and only if there exists a van Kampen diagram over $P$ which has $w$ as a boundary word.
+\end{proposition}
+
+\subsection{Reduced van Kampen Diagrams}
+
+We begin with the following definition.
+
+\begin{definition}\label{def:non-reduced}
+  A van Kampen diagram $\mathcal D = (\Gamma, v)$ is \emph{non-reduced} if it contains two compact faces $\mathcal F_1$ and $\mathcal F_2$ which share an edge $p\to^x q$ for which $\partial_\circlearrowleft (\mathcal F_1,q) = \partial_\circlearrowright (\mathcal F_2,q)$.
+\end{definition}
+
+From the above definition, we then have the following definition.
+
+\begin{definition}
+  A van Kampen diagram is \emph{reduced} if it is not \emph{non-reduced}.
+\end{definition}
+
+We then have the following result which is a stronger version of \cref{prop:van-kampen-lemma}.
+
+\begin{proposition}\label{prop:stong-van-kampen}
+  Let $P = \left\langle X\mid R \right\rangle$ be a finite presentation as in \cref{ex:van-kampen-construct}.
+  Then, a word $w\in (X^{\pm 1})^*$ is in the word problem if and only if there exists a \underline{reduced} van Kampen diagram over $P$ which has $w$ as a boundary word.
+\end{proposition}
+
+\begin{myproof}
+We prove both directions of this proposition separately as follows.
+
+\medskip
+\noindent
+($\Leftarrow$): This direction follows immediately from \cref{prop:van-kampen-lemma}.
+
+\medskip
+\noindent
+($\Rightarrow$):
+From \cref{prop:van-kampen-lemma}, we see that there must exist a van Kampen diagram $\mathcal D$ with $w = \partial_\circlearrowleft \mathcal D$ as its boundary word.
+Let $n$ be the number of compact faces contained in the diagram $\mathcal D$.
+Without loss of generality, we assume that $\mathcal D$ has a minimal number of faces out of all such van Kampen diagrams.
+We will now show that the van Kampen diagram $\mathcal D$ is necessarily reduced.
+
+Suppose for contradiction that $\mathcal D$ is non-reduced.
+In  particular, suppose that the compact faces $\mathcal F_1$ and $\mathcal F_2$ share an edge $p\to^x q$ for which $\partial_{\circlearrowleft} (\mathcal F_1,q) = \partial_\circlearrowright (\mathcal F_2,q)$.
+Then, remove the edge $p\to^x q$ from the diagram, then repeatedly remove any non-root vertices of edge-degree 1 (we need this additional step to ensure we have a diagram).
+After this modification, we have a diagram $\mathcal D'$ over $X$ with the following properties.
+\begin{itemize}
+  \item The diagram $\mathcal D'$ has one fewer face then $\mathcal D$, in particular, the faces $\mathcal F_1$ and $\mathcal F_2$ have been merged into one face $\mathcal F$; and
+  \item the boundary of this new face $\mathcal F$ freely reduces to the trivial word.
+\end{itemize}
+Thus, $\mathcal D'$ has exactly $n-1$ compact faces.
+Applying \cref{lem:diagram-decomp} to $\mathcal D'$, we see that
+\[
+		w
+		=_{F_X}
+		\prod_{i=1}^{n-1}
+    u_i r_i u_{i}^{-1}
+\]
+where each $u_i \in F_X$, and each $r_i \in R^\circ \cup \{ \varepsilon \}$.
+Notice here that we include the empty word $\varepsilon$ to account for the boundary of the face $\mathcal F$ in $\mathcal D'$.
+Hence, it follows that
+\[
+		w
+		=_{F_X}
+		\prod_{i=1}^{k}
+    u_i r_i^{\varepsilon_i} u_{i}^{-1}
+\]
+for some $k\leq n-1$, where each $\varepsilon_i \in \{-1,1\}$, each $u_i \in F_X$, and each $r_i \in R$.
+
+From \cref{lem:van-kampen-construct}, we then conclude that there must exist a van Kampen diagram with boundary word $w$ and at most $k\leq n-1$ faces.
+This contradicts our earlier assumption that $\mathcal D$ has a minimal number of faces.
+By contradiction, the van Kampen diagram $\mathcal D$ is reduced.
+\end{myproof}
+
+\section{Metric Small Cancellation}\label{sec:metric-small-cancellation}
+
+In this section, we will study one application of van Kampen diagrams.
+In particular, we use the theory of van Kampen diagrams to show that if a group presentation has the property of being \emph{metric small cancellation $C'(1/6)$}, then its word problem can be solved by a very simple process known as \emph{Dehn's algorithm}.
+Moreover, we will see that in some way, almost every group presentation has this property.
+We define \emph{metric small cancellation} as follows.
+
+\begin{definition}\label{def:small-cancel}
+  Let $P = \left\langle X \mid R\right\rangle$ be a finite presentation as in \cref{def:van-kampen}, let $R^\circ$ denote the set defined in \cref{def:van-kampen}, and let $\lambda$ be a real value for which $0 < \lambda< 1$.
+  Then, $P$ satisfies \emph{metric small cancellation condition $C'(\lambda)$} if it satisfies the following condition:
+  If the words $r_1,r_2\in R^\circ$ share a common prefix of length at least $\lambda\cdot \min(|r_1|, |r_2|)$ then it follows that $r_1=r_2$.
+\end{definition}
+
+Intuitively, a group presentation is \emph{metric small cancellation} if its relators do not share any long common subwords.
+We then have the following helpful lemma.
+
+\begin{lemma}\label{lem:reduced}
+Let $P = \left\langle X \mid R \right\rangle$ be a presentation with property $C'(\lambda)$, and let $\mathcal D$ be a van Kampen diagram over $P$.
+If $\mathcal D$ has adjacent faces $\mathcal F_1$ and $\mathcal F_2$ which share a common path of length at least
+\[
+  \lambda \cdot \min \left(
+    \left|\partial_\circlearrowleft (\mathcal F_1, q)\right|,
+    \left|\partial_\circlearrowleft (\mathcal F_2, q)\right| \right),
+\]
+then $\mathcal D$ is non-reduced.
+\end{lemma}
+
+\begin{exercise}[\exerciseLevelEasy]
+Prove \cref{lem:reduced}. \textit{(Hint: this follows from \cref{def:small-cancel,def:non-reduced}.)}
+\end{exercise}
+
+\subsection{Disk Diagrams}
+To simplify the proof of \cref{prop:small-cancellation-theorem}, we introduce the following definition and lemma.
+
+\begin{definition}\label{def:disk-graph}
+  A planar graph is called a \emph{disk} if its boundary cycle does not repeat any edges or vertices, with the exception of the first and last vertex (i.e.~the boundary path is a polygon).
+\end{definition}
+
+We then have the following technical lemma.
+We have also provided some examples of this lemma to make it easier to understand.
+
+\begin{lemma}\label{lem:reduction-to-disk-graph}
+  Let $\mathcal D = (\Gamma, v)$ be a reduced van Kampen diagram with at least one compact face.
+  Then, there is a subgraph $\Gamma'$ of $\Gamma$, which contains a vertex $v'$ such that
+  \begin{itemize}
+    \item $\Gamma'$ has at least one compact face;
+    \item $\Gamma'$ is a disk;
+    \item $\mathcal D' = (\Gamma', v')$ is a reduced van Kampen diagram; and
+    \item the path corresponding to the boundary $\partial_\circlearrowleft \mathcal D'$ is a subpath of the path corresponding to the boundary $\partial_\circlearrowleft \mathcal D$;
+  \end{itemize}
+  We then say that the resulting van Kampen diagram $\mathcal D'$ is a \emph{disk diagram}.
+\end{lemma}
+
+\begin{example}
+  In the following two van Kampen diagrams, such a subgraph $\mathcal D'$ is marked in red.
+
+{
+  \hfill
+  \includegraphics{figures/vanKampenDiagramDisk}
+  \hfill
+  \includegraphics{figures/vanKampenDiagramDisk2}
+  \hfill
+}
+
+\end{example}
+
+\begin{exercise}[\exerciseLevelMedium]
+  Prove \cref{lem:reduction-to-disk-graph}.
+\end{exercise}
+
+\subsection{Greendlinger's Lemma}
+We are now ready to prove the following result.
+
+\begin{proposition}\label{prop:small-cancellation-theorem}
+  Let $P = \left\langle X \mid R \right\rangle$ be a presentation with metric small cancellation $C'(1/6)$.
+  Let $w \in (X^{\pm 1})^*$ be a non-empty freely reduced word which belongs to the word problem of $P$.
+  Then, here exists a relator $r \in R^\circ$ which can be factored as $r = r_1 r_2$ with $|r_1| > |r_2|$, such that $w$ contains $r_1$ as a subword.
+  That is, $w$ contains more than half of some relator in $R^\circ$.
+\end{proposition}
+
+\begin{myproof}
+
+Suppose we are given such a freely reduced word $w\in (X^{\pm 1})^*$ as in the proposition statement.
+From \cref{prop:van-kampen-lemma}, we then see that there exists a reduced van Kampen diagram $\mathcal D$ whose boundary word is $w$.
+
+Our proposition is then equivalent to the statement that the boundary of $\mathcal D$ contains more than half of some relator in $R^\circ$.
+Thus, in the remainder of this proof, we assume for contradiction that the boundary of the $\mathcal D$ does not contain more than half a relator.
+
+\medskip
+\noindent
+\underline{Assumptions on $\mathcal D$}:\nopagebreak
+
+\smallskip\nopagebreak
+\noindent\nopagebreak
+From \cref{lem:reduction-to-disk-graph}, we see that it is sufficient to prove our proposition in the case that $\mathcal D$ is a disk diagram.
+In particular, if we find a contradiction under the additional assumption that $\mathcal D$ is a disk diagram, then there is a contradiction for every van Kampen diagram.
+
+Notice that $\mathcal D$ is also a diagram over $X^*$, that is, we can view the edge labels as words over $X$.
+We now modify the diagram $\mathcal D$ by repeating the following replacement.
+\begin{itemize}
+  \item Suppose that $u$ is a vertex other than the root, and that $u$ has edge-degree 2.
+    Then, we replace the unique path $p \to^x u \to^y q$, where $x,y\in (X^{\pm 1})^*$, with an edge $p \to^{xy} q$, and delete the vertex $u$.
+\end{itemize}
+Notice that after this process, the graph $\mathcal D$ is a diagram over $X^*$ where:
+\begin{enumerate}
+  \item\label{prop:small-cancel/1} the diagram $\mathcal D$ is connected and has at least one compact face;
+  \item\label{prop:small-cancel/2} every vertex, except potentially for the root, has edge-degree at least 3;
+  \item\label{prop:small-cancel/3} the diagram $\mathcal D$ is a disk; and
+  \item\label{prop:small-cancel/4} the boundary word of every compact face belongs to the set $R^\circ$.
+\end{enumerate}
+and additionally:
+\begin{enumerate}[label=(\Alph*),ref=\Alph*]
+  \item\label{prop:small-cancel/A}
+    If the edge $p\to^m q$ is adjacent to a compact face $\mathcal F$ and the boundary face, then \[|m|\leq \frac{1}{2}|\partial_\circlearrowleft (\mathcal F, p)|.\]
+    This follows as otherwise the boundary word of $\mathcal D$ would contain more than half a relator.
+  \item\label{prop:small-cancel/B}
+    If the edge $p\to^m q$ is adjacent to two compact faces $\mathcal F_1$ and $\mathcal F_2$, then \[|m|< \frac{1}{6}|\partial_\circlearrowleft (\mathcal F_i, p)|.\]
+    This follows as otherwise, from \cref{lem:reduced}, it would follow that $\mathcal D$ is not reduced.
+\end{enumerate}
+
+\medskip
+\noindent
+\underline{First lower bound on the number of edges}:\nopagebreak
+
+\smallskip\nopagebreak
+\noindent\nopagebreak
+From Assumption~(\ref{prop:small-cancel/2}), we see that
+\begin{equation}\label{small-cancel/eq1}
+  \#E(\mathcal D) \geq \frac{3}{2}\left( \#V(\mathcal D) - 1 \right)
+\end{equation}
+where $\#E(\mathcal D)$ is the number of edges in $\mathcal D$, and $\#V(\mathcal D)$ is the number of vertices in $\mathcal D$.
+
+\medskip
+\noindent
+\underline{Second lower bound on the number of edges}:\nopagebreak
+
+\smallskip\nopagebreak
+\noindent\nopagebreak
+We now find a lower bound on the number of edges based on the faces.
+
+Let $\mathcal F$ be a compact face of the diagram $\mathcal D$:
+\begin{enumerate}[label=(\roman*),ref=\roman*]
+  \item
+    If $\mathcal F$ does not share an edge with the boundary face, then from Assumption~(\ref{prop:small-cancel/A}), we see that $\mathcal F$ must have at least $7$ edges, each shared with some compact face.
+
+    \smallskip
+    \noindent \textit{Summary}: at least 7 edges shared with other compact faces.
+    \medskip
+
+  \item
+    If $\mathcal F$ shares exactly one edge with the boundary face, then from Assumptions~(\ref{prop:small-cancel/A}) and~(\ref{prop:small-cancel/B}), we see that $\mathcal F$ must have at least 4 additional edges, each shared with compact faces. 
+
+    \smallskip
+    \noindent \textit{Summary}: \begin{itemize}\item[$*$] exactly 1 edge shared with the boundary face, and \item[$*$] at least 4 edges shared with other compact faces.\end{itemize}
+    \medskip
+  \item
+    If $\mathcal F$ shares exactly two edges with the boundary face, then either
+    \begin{enumerate}[label=(\alph*), ref=\alph*]
+      \item\label{caseA} both edges are adjacent to the root vertex, and thus from Assumptions~(\ref{prop:small-cancel/3}), we see that $\mathcal F$ must have at least one additional face that it shares with a compact face; or
+      \item the two edges are not adjacent and thus, $\mathcal F$ must have at least two additional edges that it shares with compact faces.
+    \end{enumerate}
+    \noindent
+    Since $\mathcal D$ is a disk (see Assumption~(\ref{prop:small-cancel/3})), case (\ref{caseA}) can occur for at most one face.
+
+    \smallskip
+  \noindent \textit{Summary}: \begin{itemize}\item[$*$] at least 2 edges shared with the boundary face, and \item[$*$] for at most one face, we have 1 additional edge which is adjacent to another compact face; for all other faces, we have at least 2 edges shared with other compact faces.\end{itemize}
+    \medskip
+  \item
+    Otherwise, $\mathcal F$ has at least 3 edges that it shares with the boundary face.
+
+\end{enumerate}
+\noindent
+From the above cases, we see that
+\begin{multline}\label{small-cancel/eq2}
+  \#E(\mathcal D) \geq 
+    \min\Bigg(
+            \frac{7}{2}\left( \#F(\mathcal D) - 1 \right),\ \ 
+            \left(1 + \frac{4}{2}\right)\left( \#F(\mathcal D) - 1 \right),\\
+            \left(2 +\frac{1}{2}\right)+ \left(2 + \frac{2}{2}\right)\left( \#F(\mathcal D) - 2 \right),\ \ 
+            3\left( \#F(\mathcal D) - 1 \right)
+  \Bigg)
+\end{multline}
+where $\#F(\mathcal D)$ is the number of faces of $\mathcal D$ (including the boundary face).
+Hence,
+\begin{equation}\label{small-cancel/eq3}
+  \#E(\mathcal D) \geq 
+  3 \cdot \#F(\mathcal D) - \frac{7}{2}.
+\end{equation}
+
+\medskip
+\noindent
+\underline{Euler characteristic}:\nopagebreak
+
+\smallskip\nopagebreak
+\noindent\nopagebreak
+Combining equations (\ref{small-cancel/eq1}) and (\ref{small-cancel/eq3}), we see that
+\[
+  \#E(\mathcal D)
+  \geq
+  \left(\#V(\mathcal D) + \frac{2}{3}\right)
+  +
+  \left(\#F(\mathcal D) - \frac{7}{6}\right)
+  =
+  \#V(\mathcal D) + \#F(\mathcal D) - \frac{1}{2}.
+\]
+Thus, we see that
+\[
+  \#V(\mathcal D) - \#E(\mathcal D) + \#F(\mathcal D)\leq \frac{1}{2}.
+\]
+However, it is known that the Euler characteristic for a connected planar graph is 2, that is,
+\[\#V(\mathcal D) - \#E(\mathcal D) + \#F(\mathcal D)=2.\]
+Thus, we have a contradiction.
+\end{myproof}
+
+\subsection{Examples}
+The classic example of groups having metric small cancellation $C'(1/6)$ are the surface groups of tori of genus $g\geq 2$.
+In particular, for $g\geq 2$, the surface group of a genus $g$ torus has the presentation
+\[
+  S(g)
+  =
+  \left\langle
+    a_1, a_2,\ldots, a_g,
+    b_1, b_2,\ldots, b_g
+  \mid
+    [a_1, b_1][a_2,b_2]\cdots [a_g, b_g]
+  \right\rangle
+\]
+where $[x,y] = xyx^{-1}y^{-1}$.
+
+\begin{exercise}[\exerciseLevelEasy]
+  Prove that $S(2)$ has metric small cancellation condition $C'(1/6)$.
+\end{exercise}
+\begin{exercise}[\exerciseLevelEasy]
+  Prove that $S(g)$ has metric small cancellation condition $C'(1/6)$ for all $g\geq 3$.
+\end{exercise}
+
+\subsection{Dehn's Algorithm}\label{sec:dehn-algo}
+
+Let $P = \left\langle X \mid R \right\rangle$ be a presentation with metric small cancellation $C'(1/6)$.
+Then, from \cref{prop:small-cancellation-theorem}, we see that we can solve the word problem using the following algorithm.
+
+Suppose we are given as input a word $w\in (X^{\pm 1})^*$, then repeatedly perform the following:
+\begin{enumerate}
+  \item\label{step1} Freely reduce the word $w$.
+  \item\label{step2} For every relator $r \in R^\circ$, and every factorisation $r = r_1 r_2$ with $|r_1|< |r_2|$, replace every instance of $r_1$ in $w$ with the strictly shorter word $r_2^{-1}$.
+  \item If $w = \varepsilon$, then answer `yes' (i.e.~the original word was in the word problem).
+  \item If neither step~\ref{step1} nor step~\ref{step2} reduced the length of $w$, then we answer `no' (i.e.~the original word does not belong to the word problem).
+\end{enumerate}
+Notice that there are only finitely many words in $R^\circ$, and only finitely many ways of factorising $r$ as $r = r_1 r_2$, thus step~\ref{step2}, as above, is well-defined.
+
+\begin{exercise}[\exerciseLevelEasy]
+  Prove that the algorithm described above solves the word problem groups with property $C'(1/6)$.
+\textit{(Hint: use \cref{prop:small-cancellation-theorem}.)}
+\end{exercise}
+
+\subsection{Random Groups}
+
+In \cref{sec:dehn-algo}, we saw that the word problem for any group with metric small cancellation $C'(1/6)$ is easily solvable using Dehn's algorithm.
+In this section, we show that `almost every' finitely presented group has property $C'(1/6)$.
+We begin with some notation.
+
+Fix a generating set $X$ of size at least $|X|\geq 2$.
+For each $m,\ell\geq 0$, we write $\mathcal W_{m,\ell}\subset 2^{X^*}$ for the set of all sets, each containing at most $m$ relators, each with length at most $\ell$.
+Suppose that $\mathcal P$ is some group property $\mathcal P$, that is, $\mathcal P$ is a subset of the set of all finitely presentable groups.
+
+The \emph{probability of $\mathcal P$} is then a family of values
+\[
+	p_{m,\ell}(\mathcal P)
+	\coloneq
+	\frac{|\{ R\in\mathcal W_{m,\ell} \mid \left\langle X\mid R \right\rangle \in \mathcal P  \}|}{| \mathcal W_{m,\ell} |}.
+\]
+We say that a group property is \emph{generic} in the few relation model if, for each $m \geqslant 1$, we have
+\[
+	\lim_{\ell \to \infty} p_{m,\ell}(\mathcal{P}) = 1.
+\]
+Furthermore, we say that $\mathcal{P}$ is \emph{strongly generic} if this limit converges exponentially fast.
+
+\begin{lemma}[Lemma~3 in~\cite{arzhantseva}]
+For each $\lambda$, with $0< \lambda<1$, the property of being metric small cancellation $C'(\lambda)$ is strongly generic.
+\end{lemma}
+
+Let some $d$ with $0 \leqslant d \leqslant 1$ be given and let $f_{X,d}(\ell) = (2r-1)^{d\ell}$.
+Then, we say that a set of presentations $\mathcal{P}$ is \emph{generic at density $d$} if
+\[
+	\lim_{\ell \to \infty}
+	p_{f_{X,d}(\ell),\ell}(\mathcal{P}) = 1
+\]
+and we say that $\mathcal{P}$ is \emph{negligible at density $d$} if
+\[
+	\lim_{\ell \to \infty}
+	p_{f_{X,d}(\ell),\ell}(\mathcal{P}) = 0.
+\]
+
+\begin{lemma}[Section~9.B in~\cite{gromov_asymptotic}]
+For each $\lambda$, with $0 < \lambda < 1$, the property of being metric small cancellation $C'(\lambda)$ is generic at density $d$ if $d < \lambda/2$, and negligible at density $d$ if $d > \lambda/2$.
+\end{lemma}
+
+\section{HNN Extensions}
+
+\begin{definition}\label{def:hnn-extension}
+	Let $G = \left\langle X \mid R\right\rangle$ be a group, and let $\varphi\colon A\to B$ be a group isomorphism between subgroups $A,B\leq G$.
+	Suppose that the subgroup $A$ has generating set $X_A \subset G$.
+	Then,
+	\[
+		G\hnn_\varphi
+		=
+		\left\langle
+		X, t
+		\mid
+		R, tat^{-1} = \varphi(a)\text{ for each } a\in X_A
+		\right\rangle
+	\]
+	is the \emph{HNN extension of $G$ over $\varphi$}.
+	Notice here that the letter $t$ is a fresh generator which is not contained in the generating set $X$.
+	This new generator is called the \emph{stable letter} of the extension.
+\end{definition}
+
+Our first step in studying this construction is to describe a normal form as in the following lemma.
+Our proof of this lemma is a modified version of Theorem~2.1 on p.~182 of \cite{lyndon2001}.
+
+\begin{lemma}[Britton's Lemma]\label{def:normal-form}
+	Suppose $T_A$ and $T_B$ are sets of coset representatives of the subgroup $A$ and $B$, respectively, in the group $G$.
+	Let $\varphi\colon A\to B$ be an isomorphism.
+	Then, each element of $G\hnn_\varphi$ can be uniquely represented as a word of the form
+	\begin{equation}\label{eq:normal-form}
+		x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+	\end{equation}
+	for some $k\geq 0$ where
+	\begin{enumerate}
+		\item\label{def:normal-form/1} each $x_i \in G$;
+		\item\label{def:normal-form/2} each $\varepsilon_i \in \{1,-1\}$;
+		\item\label{def:normal-form/3} if $\varepsilon_i = 1$, then $x_i \in T_A$;
+		\item\label{def:normal-form/4} if $\varepsilon_i = -1$, then $x_i \in T_b$; and
+		\item\label{def:normal-form/5} there are no \emph{pinches}, i.e., there are no factors $tat^{-1}$ or $t^{-1}bt$ where $a\in A$, $b\in B$.
+	\end{enumerate}
+	Notice that items~\ref{def:normal-form/3},~\ref{def:normal-form/4} and~\ref{def:normal-form/5}, as above, do not apply to $x_0$, and thus $x_0$ can be any element of $G$.
+\end{lemma}
+
+\begin{myproof}
+	Let $W$ be the set of all words in the normal form as described in the lemma statement.
+	We then write $\pi\colon W\to G\hnn_\varphi$ for the natural map from the set of words in the normal form to elements of the HNN extension $G\hnn_\varphi$.
+	We write $\mathrm{End}(W)$ for the set of endomorphisms of the set $W$, that is, the set of all functions which map from $W$ to itself.
+
+	\medskip
+	\noindent
+	\underline{Overview}:
+	\nopagebreak
+
+	\smallskip
+	\noindent
+	In order to prove our theorem, we begin by defining a map $\Psi\colon G\hnn_\varphi \to \mathrm{End}(W)$.
+	During this construction, we show that this map has the following properties:
+	\begin{itemize}
+		\item the map $\Psi$ is a homomorphism;
+		\item for each $w\in W$ and $g\in G\hnn_{\varphi}$, we have $\Psi(g)(w) = w'$ with $\pi(w') = g \cdot \pi(w)$; and
+		\item for each $w\in W$, we have $\Psi(\pi(w))(1) = w$.
+	\end{itemize}
+	From this, we see that the map $g\mapsto \Psi(g)(1)$ is an isomorphism from the set of elements in $G\hnn_\varphi$ to the words in the normal form $W$ with inverse given by $\pi\colon W\to G\hnn_\varphi$.
+
+	\medskip
+	\noindent
+	\underline{Part 1}: Defining $\Psi(g)$ with $g\in G$ and proving that $\Psi$ is an isomorphism when restricted to $G$.
+	\nopagebreak
+
+	\smallskip
+	\noindent
+	Given an element $g\in G$ and a word
+	\[
+		w = x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+	\]
+	in normal form, we define
+	\[
+		\Psi(g)(w)
+		=
+		x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+		\qquad\text{where}
+		\qquad x_0' = g \cdot x_0 \in G.
+	\]
+	Notice that this is also a word in normal form.
+	From this definition, we see that $\Psi$ is an isomorphism when restricted to $G$, and that $\Psi(w)(g) = w'$ where $\pi(w')=g\cdot \pi(w)$ for $g\in G$.
+
+	\medskip
+	\noindent
+	\underline{Part 2.1}: Defining $\Psi(t)$.
+	\nopagebreak
+
+	\smallskip
+	\noindent
+	Let
+	\[
+		w = x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+	\]
+	be a word in normal form, we now define $\Psi(t)(w)$ in two cases as follows.
+	\begin{enumerate}[label=\alph*)]
+		\item If $x_0 \in A$, $k\geq 1$ and $\varepsilon_1 = -1$, then noticing that $t x_0 t^{-1} = \varphi(x_0)$ in $G\hnn_\varphi$, we define
+		      \[
+			      \Psi(t)(w)
+			      =
+			      x_1' t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+			      \qquad
+			      \text{where}
+			      \qquad
+			      x_1' = \varphi(x_0) \cdot x_1.
+		      \]
+		      It is clear that the above word is in normal form as required.
+		\item Otherwise, we uniquely factor $x_0$ as $x_0 = a x_0'$ with $a\in A$ and $x_0'\in T_A$ and write
+		      \[
+			      \Psi(t)(w)
+			      =
+			      b t x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+			      \qquad
+			      \text{where}
+			      \qquad
+			      b=\varphi(a).
+		      \]
+		      We choose this mapping as $tx_0 = tax_0' = \varphi(a)tx_0'$ in $G\hnn_\varphi$.
+		      We notice here that this word is in our normal form as the only potential violation is for $tx_0' t^{\varepsilon_1}$ to be a pinch.
+		      This is not possible as this would imply that $x_0' \in A$ and $\varepsilon_1=-1$, which would then imply that both $x_0\in A$ and $\varepsilon_1=-1$ which is handled by case~1 as above.
+	\end{enumerate}
+	Notice that in the above two cases, we have $\Psi(t)(w) = w'$ with $\pi(w') = t\cdot \pi(w)$.
+
+	We notice also that if
+	\[
+		w=t x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k\in W
+	\]
+	is a word in normal form, then from case~b as above, we see that
+	\[
+		\Psi(t)(x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k)
+		=
+		w.
+	\]
+	This observation will become relevant in Part~4 of this proof.
+
+	\medskip
+	\noindent
+	\underline{Part 2.2}: Defining $\Psi(t^{-1})$.
+	\nopagebreak
+
+	\smallskip
+	\noindent
+	Let
+	\[
+		w = x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+	\]
+	be a word in normal form. Similar to $\Psi(t)(w)$, we define $\Psi(t^{-1})(w)$ in two cases as follows.
+	\begin{enumerate}[label=\alph*)]
+		\item If $x_0 \in B$, $k\geq 1$ and $\varepsilon_1 = 1$, then noticing that $t^{-1} x_0 t = \varphi^{-1}(x_0)$ in $G\hnn_\varphi$, we define
+		      \[
+			      \Psi(t^{-1})(w)
+			      =
+			      x_1' t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+			      \qquad
+			      \text{where}
+			      \qquad
+			      x_1' = \varphi^{-1}(x_0) \cdot x_1.
+		      \]
+		      It is clear that the above word is in normal form as required.
+		\item Otherwise, we uniquely factor $x_0$ as $x_0 = b x_0'$ with $b\in B$ and $x_0'\in T_B$ and write
+		      \[
+			      \Psi(t^{-1})(w)
+			      =
+			      a t^{-1} x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+			      \qquad
+			      \text{where}
+			      \qquad
+			      a=\varphi^{-1}(b).
+		      \]
+		      We choose this mapping as $t^{-1}x_0 = t^{-1}bx_0' = \varphi^{-1}(b)t^{-1}x_0'$ in $G\hnn_\varphi$.
+		      We notice here that this word is in our normal form as the only potential violation is for $t^{-1}x_0' t^{\varepsilon_1}$ to be a pinch.
+		      This is not possible as this would imply that $x_0' \in B$ and $\varepsilon_1=1$, which would then imply that both $x_0\in B$ and $\varepsilon_1=1$ which is handled by case~1 as above.
+	\end{enumerate}
+	Notice that in the above two cases, we have $\Psi(t^{-1})(w) = w'$ with $\pi(w') = t\cdot \pi(w)$.
+
+	We notice also that if
+	\[
+		w=t^{-1} x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k\in W
+	\]
+	is a word in normal form, then from case~b as above, we see that
+	\[
+		\Psi(t^{-1})(x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k)
+		=
+		w.
+	\]
+	This observation will become relevant in Part~4 of this proof.
+
+	\medskip
+	\noindent
+	\underline{Part 2.3}: $\Psi(t)$ and $\Psi(t^{-1})$ are inverses of each other.
+	\nopagebreak
+
+	\smallskip
+	\noindent
+	We now prove that $\Psi(t^{-1})\circ \Psi(t)$ and $\Psi(t)\circ \Psi(t^{-1})$ are both the identity functions on the set $W$, that is, we have $\Psi(t)(\Psi(t^{-1})(w))=w$ and $\Psi(t^{-1})(\Psi(t)(w))=w$ for each $w \in W$.
+	Here we will only prove that $\Psi(t^{-1})(\Psi(t)(w))=w$. The proof that $\Psi(t)(\Psi(t^{-1})(w))=w$ is identical.
+
+	Let
+	\[
+		w = x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+	\]
+	be a word in normal form.
+	Then, we consider the following cases:
+	\begin{enumerate}[label=\alph*)]
+		\item If $x_0 \in A$, $k\geq 1$ and $\varepsilon_1 =-1$, then
+		      \[
+			      \Psi(t)(w)
+			      =
+			      x_1' t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+			      \qquad
+			      \text{where}
+			      \qquad
+			      x_1' = \varphi(x_0) \cdot x_1.
+		      \]
+		      Since $\varepsilon_1 = -1$ and $w$ is in normal form, it follows that $x_1\in T_B$, and further that if $\varepsilon_2=1$, then $x_1\notin B$.
+		      Thus, we see that
+		      \[
+			      \Psi(t^{-1})(x_1' t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k)
+			      =
+			      x_0 t^{-1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+		      \]
+		      which is identical to $w$.
+
+		\item Otherwise, we uniquely factor $x_0$ as $x_0 = b x_0'$ with $b\in B$ and $x_0'\in T_B$ and write
+		      \[
+			      \Psi(t)(w)
+			      =
+			      b t x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+			      \qquad
+			      \text{where}
+			      \qquad
+			      b=\varphi(a)\in B.
+		      \]
+		      We then see that
+		      \[
+			      \Psi(t^{-1})(b t x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k)
+			      =
+			      x_0'' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+		      \]
+		      where $x_0'' = \varphi^{-1}(b)\cdot x_0' = a \cdot x_0' = x_0$.
+	\end{enumerate}
+	Thus, we see that $\Psi(t^{-1})(\Psi(t)(w)) = w$. The proof that $\Psi(t)(\Psi(t^{-1})(w)) = w$ is identical.
+
+	From this we observe that $\Psi(t)$ and $\Psi(t^{-1})$ are inverses of one another.
+	We then extend the map $\Psi$ to the subgroup $\left\langle t \right\rangle$ such that
+	\[
+		\Psi(t^n) = (\Psi(t))^n
+	\]
+	for each $n\in \mathbb Z$.
+	Moreover, since $\Psi(t)(w)=w'$ implies that $\pi(w') = t\cdot \pi(w)$, we see that $\Psi$ is an isomorphism when restricted to the subgroup of $G\hnn_\varphi$ generated as $\left\langle t \right\rangle$.
+
+	\medskip
+	\noindent
+	\underline{Part 3}: $\Psi\colon G\hnn_\varphi \to \mathrm{End}(W)$ is a homomorphism.
+	\nopagebreak
+
+	\smallskip
+	\noindent
+	At this point we have shown that
+	\begin{enumerate}[label=\alph*)]
+		\item $\Psi$ is an isomorphism when restricted to $G$; and
+		\item $\Psi$ is an isomorphism when restricted to $\left\langle t \right\rangle$.
+	\end{enumerate}
+	Given an element
+	\[
+		g  = x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k,
+	\]
+	not necessarily in normal form, where each $x_i \in G$ and $\varepsilon_i\in \{-1,1\}$, we define
+	\[
+		\Psi(g)
+		=
+		\Psi(x_0) \Psi(t^{\varepsilon_1})\Psi(x_1)
+		\Psi(t^{\varepsilon_2})\Psi(x_2)
+		\cdots
+		\Psi(t^{\varepsilon_k})\Psi(x_k).
+	\]
+	In order to show that $\Psi\colon G\hnn_\varphi\to \mathrm{End}(W)$ is a well-defined homomorphism, we only need to show that it respects all the relators of $G\hnn_\varphi$. In particular, it only remains to be verified that
+	\[
+		\Psi(t)\Psi(a)\Psi(t^{-1}) = \Psi(\varphi(a))
+	\]
+	for each $a\in X_A$.
+	We prove this as follows.
+
+	Let
+	\[
+		w = x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+	\]
+	be a word in normal form and let $a\in X_A$.
+	Then, we consider the following two cases:
+	\begin{enumerate}[label=\alph*)]
+		\item If $x_0 \in B$, $k\geq 1$ and $\varepsilon_1 = 1$, then
+		      \[
+			      \Psi(t^{-1})(w)
+			      =
+			      x_1' t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+			      \qquad
+			      \text{where}
+			      \qquad
+			      x_1' = \varphi^{-1}(x_0) \cdot x_1.
+		      \]
+		      From an earlier argument in our proof, we see that if $\varepsilon_2 = -1$, then $x_1 \in T_A\setminus A$.
+
+		      We then see that
+		      \[
+			      \Psi(a)(x_1' t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k)
+			      =
+			      x_1'' t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+		      \]
+		      where $x_1'' = a\cdot x_1' = a\cdot \varphi^{-1}(x_0) \cdot x_1$.
+		      Moreover, we see that if $\varepsilon_2 = -1$, then $x_1'' \notin A$.
+
+		      We now see that
+		      \[
+			      \Psi(t)(x_1'' t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k)
+			      =
+			      x_0' t x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+		      \]
+		      where $x_0' = \varphi(a \cdot \varphi^{-1}(x_0)) = a\cdot x_0$.
+		      Thus, $\Psi(t)\Psi(a)\Psi(t^{-1}) (w) = \Psi(\varphi(a))(w)$.
+
+		\item Otherwise, we uniquely factor $x_0$ as $x_0 = b x_0'$ with $b\in B$ and $x_0'\in T_B$ and write
+		      \[
+			      \Psi(t^{-1})(w)
+			      =
+			      b' t^{-1} x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+			      \qquad
+			      \text{where}
+			      \qquad
+			      b'=\varphi^{-1}(b).
+		      \]
+		      We then see that
+		      \[
+			      \Psi(a)(b' t^{-1} x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k)
+			      =
+			      b'' t^{-1} x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+		      \]
+		      where $b'' =a\cdot b'= a\cdot \varphi^{-1}(b)\in A$.
+
+		      Thus,
+		      \[
+			      \Psi(t)(b'' t^{-1} x_0' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k)
+			      =
+			      x_0'' t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+		      \]
+		      where $x_0'' = \varphi(b'')\cdot x_0' = \varphi(a\cdot \varphi^{-1}(b))\cdot x_0' = a\cdot b \cdot x_0' = a\cdot x_0$.
+
+		      Thus, $\Psi(t)\Psi(a)\Psi(t^{-1}) (w) = \Psi(\varphi(a))(w)$.
+	\end{enumerate}
+	We may now conclude that $\Psi\colon G\hnn_\varphi \to \mathrm{End}(W)$ is a well-defined homomorphism.
+
+	\medskip
+	\noindent
+	\underline{Part 4}: $g\mapsto \Psi(g)(1)$ is an isomorphism from $G\hnn_\varphi\to W$ with inverse $\pi\colon W\to G\hnn_\varphi$.
+
+	\smallskip
+	\noindent
+	We begin by defining a map $f\colon G\hnn_\varphi\to W$ as $f(g) = \Psi(g)(1)$.
+
+	Recall that we have shown that $\Psi(g)(w)=w'$, then $\pi(w') = g\cdot \pi(w)$ for each $g\in G\hnn_\varphi$ and each $w\in W$.
+	Thus, for each $g\in G\hnn_\varphi$, there is a normal form word $w =f(g)= \Psi(g)(1)$ such that $\pi(w)=g$.
+	Thus, $\pi$ is a left-inverse of the function $f$, that is, $\pi(f(g))=g$ for each $g\in G\hnn_\varphi$.
+
+	Suppose that we are given some word
+	\[
+		w = x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k \in W
+	\]
+	in normal form. Then, from the definition of the homomorphism $\Psi\colon G\hnn_\varphi\to W$, we see that
+	\begin{align*}
+		f(\pi(w))=
+		\Psi(\pi(w))(1)
+		 & =
+		\Psi(x_0) \Psi(t^{\varepsilon_1})\Psi(x_1)
+		\Psi(t^{\varepsilon_2})\Psi(x_2)
+		\cdots
+		\Psi(t^{\varepsilon_{k-1}})\Psi(x_{k-1})
+		\Psi(t^{\varepsilon_k})\Psi(x_k)(1)
+		\\
+		 & =
+		\Psi(x_0) \Psi(t^{\varepsilon_1})\Psi(x_1)
+		\Psi(t^{\varepsilon_2})\Psi(x_2)
+		\cdots
+		\Psi(t^{\varepsilon_{k-1}})\Psi(x_{k-1})
+		\Psi(t^{\varepsilon_k})(x_k)
+		\\
+		 & =
+		\Psi(x_0) \Psi(t^{\varepsilon_1})\Psi(x_1)
+		\Psi(t^{\varepsilon_2})\Psi(x_2)
+		\cdots
+		\Psi(t^{\varepsilon_{k-1}})\Psi(x_{k-1})
+		(t^{\varepsilon_k}x_k)
+		\\
+		 & =
+		\Psi(x_0) \Psi(t^{\varepsilon_1})\Psi(x_1)
+		\Psi(t^{\varepsilon_2})\Psi(x_2)
+		\cdots
+		\Psi(t^{\varepsilon_{k-1}})(x_{k-1}t^{\varepsilon_k}x_k)
+		\\
+		 & \quad\vdots
+		\\
+		 & =
+		x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k.
+	\end{align*}
+	Thus, $\pi$ is a right-inverse of $f$, that is $f(\pi(w)) = w$ for each $w\in W$.
+
+	Thus, we may conclude that $f$ is an isomorphism with inverse given by $\pi$.
+
+	\medskip
+	\noindent
+	\underline{Conclusion}:
+
+	\smallskip
+	\noindent
+	We have now shown that there exists an isomorphism $f\colon G\hnn_\varphi \to W$ such that $\pi(w)=g$ for each $w=f(g)$ where $\pi\colon W\to G\hnn_\varphi$ is just evaluation of words in the group $G\hnn_\varphi$.
+	Thus, each element of $G\hnn_\varphi$ has exactly one word representing it is normal form.
+\end{myproof}
+
+\section{Amalgamated Free Products}
+
+\begin{definition}\label{def:amalgamated}
+	Let $G = \left\langle X_G\mid R_G \right\rangle$, $H = \left\langle X_H \mid R_H\right\rangle$ be groups,
+	and let $\varphi\colon A\to B$ be an isomorphism where $A\leq G$ and $B\leq H$.
+	Suppose that $X_A\subseteq G$ is a generating set for $A$.
+	Then,
+	\[
+		G*_\varphi H
+		=
+		\left\langle X_G, X_H
+		\mid
+		R_G, R_H, a = \varphi(a)\text{ for each }a\in X_A
+		\right\rangle.
+	\]
+	is the \emph{amalgamated free product of $G$ and $H$ over $\varphi$}.
+\end{definition}
+
+\begin{lemma}\label{lem:amalgamated-normal-form}
+	Let $E = G *_\varphi H$ where $\varphi\colon A\to B$ with $A\leq G$ and $B \leq H$.
+	Let $T_G\subset G$ and $T_H \subset H$ be sets of coset representatives of $A$ in $G$ and $B$ in $H$, respectively.
+	Then, every element of $E$ can be uniquely expression as a word of the form
+	\[
+		x_1 y_1 x_2 y_2 x_3 y_3 \cdots x_k y_k
+		\qquad\text{or}\qquad
+		x_1 y_1 x_2 y_2 x_3 y_3 \cdots x_k
+	\]
+	for some $k \geq 1$ where
+	\begin{enumerate}
+		\item $x_1 \in G$;
+		\item if $i > 1$, then $x_i \in T_G\setminus A$;
+		\item each $y_i \in T_H\setminus B$;
+	\end{enumerate}
+	Notice here that we place no restrictions on $x_1$.
+\end{lemma}
+
+\begin{myproof}
+  Let $G = \left\langle X_G \mid R_G\right\rangle$ and $H = \left\langle X_H \mid R_H\right\rangle$.
+  Let $\varphi\colon A\to B$ be an isomorphism of subgroups $A\leq G$ and $B\leq H$, and let $X_A$ be a generating set for $A$, as in \cref{def:amalgamated}.
+
+  Let $E$ be the amalgamated free product
+  \[
+		E = G*_\varphi H
+		=
+		\left\langle X_G, X_H
+		\mid
+		R_G, R_H, a = \varphi(a)\text{ for each }a\in X_A
+		\right\rangle,
+  \]
+	and let $F$ be the HNN extension
+	\[
+		F
+		=
+		(G * H)\hnn_{\phi}
+		=
+		\left\langle
+		X_G, X_H,t
+		\mid
+		t a t^{-1} = \varphi(a) \text{ for each }a\in X_A
+		\right\rangle.
+	\]
+
+	We now define a map $\Psi\colon E\to F$ such that
+	\[
+		\Psi(g) = t g t^{-1},\quad
+		\text{and}\quad
+		\Psi(h) = h
+	\]
+	for each $g\in G$ and $h\in H$.
+  Notice that this map is a homomorphism, this can be confirmed by checking that all the relators of $E$ are mapped to the identity of $F$.
+  
+  Our result then follows from \cref{def:normal-form}.
+\end{myproof}
+
+\begin{corollary}\label{cor:natural-embed}
+	The groups $G$ and $H$ embed naturally into the amalgamated product $G*_\varphi H$.
+\end{corollary}
+
+\begin{myproof}
+  This follows from \cref{lem:amalgamated-normal-form}.
+  In particular, $g\mapsto g$ is an embedding $G \hookrightarrow G*_\varphi H$, and
+  the map $h\mapsto a\cdot h'$, where $a\in A$ and $h' \in T_B$ with $\varphi(a)\cdot h' =h$, is an embedding $H \hookrightarrow G*_\varphi H$.
+\end{myproof}
+
+\begin{corollary}\label{cor:unequal-values}
+	Let $E = G *_\varphi H$ where $\varphi\colon A\to B$ with $A\leq G$ and $B \leq H$.
+	If $g\in G\setminus A$ and $h \in H \setminus B$, then $g \neq_E h$.
+\end{corollary}
+
+\begin{myproof}
+  This follows immediately from \cref{lem:amalgamated-normal-form}.
+\end{myproof}
+
+\section{Higman Embedding Theorem}
+
+In this section, we recall the Higman embedding theorem
+The proof of this theorem is complicated and well beyond the scope of these notes.
+However, we note that this proof relies on a certain characterisation of computable partial functions of the form $f\colon \mathbb N \rightharpoonup \mathbb N$, and properties of HNN extensions.
+In fact, from a description of a partial function, this theorem is constructive.
+
+\subsection{Recursively Presentable Groups}
+
+In order to properly state Higman embedding theorem, we need to define recursively presentable groups.
+This is a modification of \cref{sec:computable-wp}.
+
+Suppose that $P = \left\langle X \mid R\right\rangle$ is a presentation with (countably) infinitely many generators, which we label as $X = \{x_0,x_1,x_2,x_3,\ldots\}$, and potentially (countably) infinitely many relators $R$.
+
+\begin{definition}
+  The presentation $P = \left\langle X\mid R\right\rangle$ described a \emph{recursively presentable group} if there exists a recursively enumerable set $S\subseteq \mathbb N^*$ such that
+  \[
+    R = \{
+      x_{i_1} x_{i_2} \cdots x_{i_k}
+    \mid
+      (i_1,i_2,\ldots,i_k) \in S
+    \}.
+  \]
+  We refer the reader back to \cref{sec:re-sets} for a definition of recursively enumerable sets.
+\end{definition}
+
+We then have the following result.
+\begin{lemma}\label{lem:fp-implies-rp}
+  Every finitely presented group is recursively presentable.
+\end{lemma}
+
+\begin{exercise}[\exerciseLevelEasy]
+  Prove \cref{lem:fp-implies-rp}. \textit{(Hint: a generator $x \in X$ is redundant if $x\in R$.)}
+\end{exercise}
+
+\begin{example}
+  The following are examples of recursively presentable groups:
+\begin{itemize}
+	\item every finitely presented group;
+	\item the infinitely generated free group $F_\infty = \left\langle a_1, a_2, a_3,\ldots \mid - \right\rangle$;
+	\item the Lamplighter group
+	      \[
+		      \mathbb Z_2 \wr \mathbb Z
+		      =
+		      \left\langle
+		      a,t
+		      \mid
+		      a^2, [t^n a t^{-n}, t^m a t^{-m}]\text{ for all }n,m\in \mathbb Z
+		      \right\rangle;
+	      \]
+	\item the Grigorchuk group which is finitely generated but not finitely presentable; and
+	\item the rationals under addition $(\mathbb Q, +)$.
+\end{itemize}
+\end{example}
+
+\subsection{Results}
+We are not ready to state Higman's embedding theorem as follows.
+
+\begin{theorem}[Theorem~1 in~\cite{higman1961}]\label{thm:higman}
+	A group can be embedded as a subgroup of a finitely presented group if and only if it is recursively presentable.
+\end{theorem}
+
+For example, the Grigorchuk group can be embedded as a subgroup of a finitely presented group.
+In fact, from the above theorem we know that there must exist some universal finitely presented group as in the following sense.
+
+\begin{proposition}\label{lem:universal-pres}
+	There exists a finitely presented group $G$ which contains an isomorphic copy of every recursively presentable group.
+\end{proposition}
+
+\begin{myproof}
+	Notice from Higmans embedding lemma, given in \cref{thm:higman}, it is sufficient to show that there exists a finitely presented groups which contains an isomorphic copy of every finitely presented group as a subgroup.
+
+	Notice that each finitely presented group can be written down with only a finite amount of information.
+	Thus, there exists an algorithm which enumerates all of the finite presentations.
+  In particular, for each integer $k$ our algorithm may output a presentation of the form
+	\[
+		P_k = \left\langle X_k\mid R_k  \right\rangle
+	\]
+	We will demand that the generating sets $X_k$ are pairwise disjoint.
+	We then see that
+	\[
+		G = \left\langle
+		X_1 \cup X_2 \cup \ldots
+		\mid
+		R_1 \cup R_2\cup\ldots
+		\right\rangle = P_1 * P_2 * \cdots
+	\]
+	is recursively presentable and contains an isomorphic copy of each finitely presented group.
+
+	From \cref{thm:higman}, we see that we can embed $G$ into a finitely presented group.
+\end{myproof}
+
+\begin{exercise}[\exerciseLevelHard]
+  Some of the details in the proof of \cref{lem:universal-pres} have been omitted.
+  Using only the terminology presented in \cref{sec:computable}, prove that the group $G$ in the proof of \cref{lem:universal-pres} is recursively presentable.
+\end{exercise}
+
+\section{Ping Pong Lemma}
+
+\begin{lemma}\label{lem:ping-pong}
+	Let $G$ be a group with (possibly infinite) generating set $S$ which is minimal in the sense that for each pair of distinct element $s,t\in S$, we have both $s\neq_G t$ and $s \neq_G t^{-1}$.
+	Moreover, we require that $|S|\geq 2$.
+	Suppose that $G$ has a (left) group action on a set $X$ such that
+	\begin{itemize}
+		\item for each $r \in S$, there exists some nonempty subset $X_r\subseteq X$;
+		\item the sets $X_r$ are pairwise disjoint, that is, $X_s\cap X_t = \emptyset$ for each $s\neq t$; and
+		\item $s^k \cdot X_r \subset X_s$ for each $s \neq r$ and each $k \geq 1$.
+	\end{itemize}
+	Then, the group $G$ is free with free basis $S$.
+\end{lemma}
+
+\begin{myproof}
+	Let $w \in (S^{\pm 1})^*$ be an arbitrary nonempty freely reduced word.
+	We see that it is sufficient to show that any such word is nontrivial, as this would then imply that the only relator are those that can be freely reduced to the trivial word.
+
+	Notice then that we can write $w$ uniquely as $w = s_1^{n_1} s_2^{n_2} \cdots s_k^{n_k}$ where each $s_i \in S$ and $n_i \in \mathbb Z\setminus \{0\}$ with $s_i \neq s_{i+1}$ for each $i\in \{1,2,\ldots,k-1\}$.
+
+	We now assume without loss of generality that $s_1 = s_k$.
+	Generality is maintained here since if $s_1\neq s_k$, then we can define the word
+	\[
+		w' = s_1^{n_1} w s_1^{-n_1}
+		=s_1^{2n_1} s_2^{n_2} \cdots s_k^{n_k} s_1^{-n_1}.
+	\]
+	Notice that $w'$ is a conjugate of $w$, in particular, this means that $w=_G 1$ if and only if $w'=_G 1$.
+	We then see that we can assume that $s_1=s_k$ by replacing $w$ with $w'$.
+
+	We choose a generator $r \in S\setminus\{s_1\}$ (where $s_1=s_k$) which is possible since $|S| \geq 2$.
+
+	Notice then that
+	\begin{align*}
+		w\cdot X_r & = s_1^{n_1} s_2^{n_2} \cdots s_{k-1}\cdot(s_k^{n_k} \cdot X_r)
+		\\&\quad \subset s_1^{n_1} s_2^{n_2} \cdots s_{k-1} \cdot X_{s_k}
+		\\&\quad \subset s_1^{n_1} s_2^{n_2} \cdots s_{k-2} \cdot X_{s_{k-1}}
+		\\& \qquad\vdots
+		\\&\quad \subset s_1^{n_1} \cdot X_{s_2}
+		\\&\quad \subset X_{s_1}.
+	\end{align*}
+	Thus, we see that for each $x\in X_r$, we have $w\cdot x \in X_{s_1}$ and thus $w\cdot x \neq x$.
+	Hence, we have $w\neq_G 1$ for each choice of $w$ as above. Thus, $G = \left\langle S \mid - \right\rangle$ as desired.
+\end{myproof}
+
+\begin{lemma}\label{lem:free-groups}
+	Let $F_2 = \left\langle a,b \mid - \right\rangle$ be a rank 2 free group.
+	Then the set,
+	\[
+		S
+		=
+		\{
+		b^n a b^{-n} \mid n\in \mathbb N
+		\}
+	\]
+	forms a basis for a free subgroup $F_\infty = \left\langle S \right\rangle$.
+\end{lemma}
+
+\begin{myproof}
+	We prove this using the ping pong lemma as given in \cref{lem:ping-pong}.
+
+	Notice that $F_2$ clearly has a left action on itself by left multiplication.
+	Thus, we choose $X = F_2$.
+
+	For each generator $s_n = b^n a b^{-n}$, we define a nonempty subset of $X$ as
+	\[
+		X_{s_n} = \{
+		b^n a b^{k_1} a b^{k_2} a \cdots b^{k_j} a \in F_2
+		\mid
+		j \geq 1
+		\text{ each }k_i \in \mathbb Z \setminus \{0\}
+		\}.
+	\]
+	We then see that clearly each $X_{s_n}$ is nonempty, and that $X_{s_n}\cap X_{s_{m}} = \emptyset$ for each $n\neq m$.
+
+	Now let $n,m\in \mathbb N$ with $n\neq m$.
+	Let $x$ be an arbitrary element of $X_{s_n}$, that is,
+	\[
+		x =
+		b^n a b^{k_1} a b^{k_2} a \cdots b^{k_j} a
+	\]
+	Now notice that
+	\[
+		s_m \cdot x
+		=
+		b^{m} a b^{-m}
+		b^n a^{k_1} b^{k_2} a^{k_3} \cdots a^{k_j}.
+		=
+		b^{m} a b^{n-m} a^{k_1} b^{k_2} a^{k_3} \cdots a^{k_j}.
+	\]
+	Notice then that since $n\neq m$, we see that
+	\[
+		b^{m} a b^{n-m} a^{k_1} b^{k_2} a^{k_3} \cdots a^{k_j} \in X_{s_m}.
+	\]
+	From this we see that
+	\[
+		s_m \cdot X_{s_n} \subset X_{s_m}.
+	\]
+	We now notice that we have shown all the requirements in order to apply \cref{lem:ping-pong}.
+	Thus, we may now conclude that $S$ is a free basis, in particular, we see that $F_\infty = \left\langle S \right\rangle$.
+\end{myproof}
+\section{Unsolvable Word Problems}
+
+\begin{theorem}\label{thm:unsolvable-wp}
+	There is a finitely presented group with unsolvable word problem.
+\end{theorem}
+
+\begin{myproof}
+	Let $G = \left\langle a,b \mid - \right\rangle$ and $H = \left\langle c,d \mid - \right\rangle$ be free groups of rank 2.
+	From \cref{lem:free-groups}, we see that $S = \{ b^n a b^{-n} \mid n\in \mathbb N \}$ and $T = \{ d^n c d^{-n} \mid n\in \mathbb N \}$ are free bases of free subgroups in $G$ and $H$, respectively.
+  Now, let $N\subset \mathbb N$ be a set of natural numbers that is recursively enumerable but not recursive, for example, the set $\underline{\mathrm{Halting}}$ as in \cref{prop:re-but-not-comp}.
+	From this set, we then define free subgroups $P\leq G$ and $Q\leq H$ as
+	\begin{align*}
+		P & = \left\langle \{b^n a b^{-n} \mid n \in N\} \right\rangle &
+		Q & = \left\langle \{d^n c d^{-n} \mid n \in N \}\right\rangle.
+	\end{align*}
+	Let $\varphi\colon P \to Q$ be the isomorphism defined such that
+	\[
+		\varphi(b^n a b^{-n}) = d^n c d^{-n}
+		\quad\text{for each}\quad n \in N.
+	\]
+	Now, let $A$ be the amalgamated free product
+	\[
+		A
+		=
+		G*_\varphi H
+		=
+		\left\langle
+		a,b,c,d
+		\mid
+		\{
+		b^n a b^{-n}
+		=
+		d^n c d^{-n}
+		\mid
+		n \in N
+		\}
+		\right\rangle.
+	\]
+	From \cref{cor:unequal-values}, we see that $b^n a b^{-n} =_A d^n c d^{-n}$ if and only if $n \in N$.
+	Thus, there cannot be any algorithm which solves the word problem for $A$ as such an algorithm would allow us to decide membership for the set $N$.
+
+	Notice now that the group $A$ is recursively presented, and thus from \cref{thm:higman}, we see that there exists a finitely presented group $B$ which contains $A$ as a subgroup.
+	Thus, this group $B$ cannot have a solvable word problem as this would allow us to solve the word problem for $A$.
+\end{myproof}
+
+\begin{remark}
+	An explicit example of a finitely presented group with unsolvable word problem with 10 generators and 27 relators was given by \textcite{collins1986} in 1986, then later a simpler example with 2 generators and 27 relators was given by \textcite{wang2016} in 2016.
+\end{remark}
+
+\printbibliography
+\end{document}

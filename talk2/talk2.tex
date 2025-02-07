@@ -1,0 +1,747 @@
+\documentclass[11pt,a4paper,reqno]{amsart}
+
+% localisation settings
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[australian]{babel}
+\usepackage{csquotes}
+
+\usepackage{microtype}
+
+\usepackage{fullpage}
+
+\usepackage{enumitem}
+
+\usepackage{amsfonts,amsmath,amsthm,amssymb,mathtools,stmaryrd,mathrsfs}
+\usepackage{thmtools, thm-restate}
+
+% defines \righttoleftarrow
+\usepackage[mathb]{mathabx}
+\changenotsign
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Table of contents
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\def\l@section{\@tocline{1}{12pt plus 2pt}{0pt}{}{\bfseries}}% <- added
+
+\def\@tocline#1#2#3#4#5#6#7{\relax
+  \ifnum #1>\c@tocdepth % then omit
+  \else
+    \par \addpenalty\@secpenalty\addvspace{#2}%
+    \begingroup \hyphenpenalty\@M
+    \@ifempty{#4}{%
+      \@tempdima\csname r@tocindent\number#1\endcsname\relax
+    }{%
+      \@tempdima#4\relax
+    }%
+    \parindent\z@ \leftskip#3\relax \advance\leftskip\@tempdima\relax
+    \rightskip\@pnumwidth plus4em \parfillskip-\@pnumwidth
+    #5\leavevmode\hskip-\@tempdima #6\nobreak\relax
+     \ifnum#1<2\hfill\else\dotfill\fi %<- added
+     \hbox to\@pnumwidth{\@tocpagenum{#7}}\par
+    \nobreak
+    \endgroup
+\fi}
+\makeatother
+
+\setcounter{tocdepth}{3}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Hyperref
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\definecolor{darkblue}{rgb}{0.0, 0.0, 0.55}
+\hypersetup{%
+	% link colours
+	colorlinks=true,
+	linkcolor = darkblue,
+	anchorcolor = darkblue,
+	citecolor = darkblue,
+	filecolor = darkblue,
+	urlcolor = darkblue,
+	% links in table of contents
+	linktoc=page
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% \llangle and \rrangle
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\DeclareFontFamily{OMX}{MnSymbolE}{}
+\DeclareSymbolFont{MnLargeSymbols}{OMX}{MnSymbolE}{m}{n}
+\SetSymbolFont{MnLargeSymbols}{bold}{OMX}{MnSymbolE}{b}{n}
+\DeclareFontShape{OMX}{MnSymbolE}{m}{n}{
+    <-6>  MnSymbolE5
+   <6-7>  MnSymbolE6
+   <7-8>  MnSymbolE7
+   <8-9>  MnSymbolE8
+   <9-10> MnSymbolE9
+  <10-12> MnSymbolE10
+  <12->   MnSymbolE12
+}{}
+\DeclareFontShape{OMX}{MnSymbolE}{b}{n}{
+    <-6>  MnSymbolE-Bold5
+   <6-7>  MnSymbolE-Bold6
+   <7-8>  MnSymbolE-Bold7
+   <8-9>  MnSymbolE-Bold8
+   <9-10> MnSymbolE-Bold9
+  <10-12> MnSymbolE-Bold10
+  <12->   MnSymbolE-Bold12
+}{}
+
+\let\llangle\@undefined
+\let\rrangle\@undefined
+\DeclareMathDelimiter{\llangle}{\mathopen}%
+                     {MnLargeSymbols}{'164}{MnLargeSymbols}{'164}
+\DeclareMathDelimiter{\rrangle}{\mathclose}%
+                     {MnLargeSymbols}{'171}{MnLargeSymbols}{'171}
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% cleveref and theorems
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[capitalise,noabbrev,sort]{cleveref}
+
+\definecolor{tol1}{RGB}{68, 119, 170}
+\definecolor{tol2}{RGB}{34, 136, 51}
+\definecolor{tol3}{RGB}{204, 187, 68}
+\definecolor{tol4}{RGB}{238, 102, 119}
+
+\definecolor{tolExtra}{RGB}{0, 68, 136}
+
+\theoremstyle{plain}
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{note}[theorem]{Note}
+\newtheorem{question}[theorem]{Question}
+
+\usepackage[many]{tcolorbox}
+\newcommand\colorthm[2]{\tcolorboxenvironment{#1}{
+		colback=#2!10!white,
+		boxrule=0pt,
+		boxsep=1pt,
+		left=2pt,right=2pt,top=2pt,bottom=2pt,
+		oversize=2pt,
+		sharp corners,
+		before skip=\topsep,
+		after skip=\topsep,
+}}
+\colorthm{theorem}{tol1}
+\colorthm{lemma}{tol1}
+\colorthm{proposition}{tol1}
+\colorthm{corollary}{tol1}
+
+\colorthm{definition}{tol2}
+
+\colorthm{example}{tol3}
+\colorthm{remark}{tol3}
+\colorthm{note}{tol3}
+
+\colorthm{exercise}{tol4}
+\colorthm{question}{tol4}
+
+% additional theorem with letters
+\newtheorem{theoremx}{Theorem}
+\renewcommand{\thetheoremx}{\Alph{theoremx}}
+\newtheorem{corollaryx}{Corollary}[theoremx]
+
+\crefalias{theoremx}{theorem}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Bibliography
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[
+	backend=biber,
+	style=numeric-comp,
+	maxcitenames=10,
+	maxbibnames=100,
+	safeinputenc,
+	useprefix
+]{biblatex}
+\addbibresource{talk2.bib}
+\usepackage{mathscinet}
+
+% make sure that names are not sorted by prefix first
+\DeclareSortingNamekeyTemplate{
+	\keypart{
+		\namepart{family}}
+	\keypart{
+		\namepart{prefix}}
+	\keypart{
+		\namepart{given}}
+	\keypart{
+		\namepart{suffix}}
+}
+
+% make sure that the prefix is not capitalised
+%  BibLaTeX will capitalise the first letter in some cases, this stops this
+\renewbibmacro{begentry}{\midsentence}
+
+% make sure that biblatex uses a non-breaking space in \textcite
+\renewcommand\namelabeldelim{\addnbspace}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% Various commands
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand\leq\leqslant
+\renewcommand\geq\geqslant
+
+\newcommand\Cay{\ensuremath{\mathrm{Cay}}}
+\newcommand\Ball{\ensuremath{\mathrm{B}}}
+\newcommand\Area{\ensuremath{\mathrm{Area}}}
+
+\newenvironment{indentline}{\begin{itemize}[leftmargin=1em]\item[]}{\end{itemize}}
+\newcommand\hl[1]{\colorbox{gray!10}{#1}}
+
+\newenvironment{myproof}{\begin{proof}[\normalfont\bfseries Proof.]}{\end{proof}}
+
+\newcommand\hnn{*\!\!\righttoleftarrow}
+\newcommand\Grp{\textsc{Grp}}
+
+% levels of difficulty of the exercises
+\newcommand\exerciseLevelEasy{$\star$}
+\newcommand\exerciseLevelMedium{$\star${\,}$\star$}
+\newcommand\exerciseLevelHard{$\star${\,}$\star${\,}$\star$}
+\newcommand\exerciseLevelVeryHard{$\star${\,}$\star${\,}$\star${\,}$\star$}
+
+\begin{document}
+
+\title{Decision problems in group theory\\(Part 2: Markov Properties)}
+\author{Alex Bishop}
+\date{22 May 2024 \textit{(updated 7 Feb 2025)}}
+\email{alexbishop1234@gmail.com}
+\urladdr{https://alexbishop.github.io}
+\address{%
+	Section de mathématiques\\
+	Université de Genève\\
+	rue du Conseil-Général~7-9\\
+	1205 Genève, Switzerland}
+
+\begin{abstract}
+	In 1911, Max Dehn considered the word problem, conjugacy problem and isomorphism problem for finitely presented groups. Motivation for these problems can be found in algebraic topology. In particular, the word problem allows us to verify if a curve is contractable; the conjugacy problem enables us to check if two given curves are free homotopic; and the isomorphism problem gives us a method to confirm that two spaces are not isomorphic. Moreover, in the case of knot theory, the isomorphism problem allows us to identify if a given knot is the unknot. These three problems, studied by Dehn, are fundamental to the study of group theory and are all examples of decision problems of groups.
+
+	In our first talk, we focus on the word problem for groups. Solutions to this problem are important as they allow us to perform calculations and decide on the equality of group elements. We begin by studying examples and classes of groups for which the word problem is easily solvable. In fact, under certain interpretations of random group presentations, almost all finitely presented groups have such an easily solvable word problem. We end this talk by showing that there exist finitely presented groups with undecidable word problems, that is, there is no algorithm that can correctly determine if any given product of group generators is the group identity.
+
+	In our second talk, we study the class of group properties known as Markov properties. Examples of such properties include being the trivial group, finite, abelian, amenable, torsion-free, having a solvable word problem, or having a solvable conjugacy problem. Using the unsolvability of the word problem from our first talk, we show that no algorithm can decide if a given finitely presented group has a particular Markov property. For example, it is impossible, in general, to decide if a given finitely presented group is abelian.
+\end{abstract}
+\maketitle
+
+\section{Markov Properties}
+
+Formally, a group property $\mathcal M$ is simply a set of finitely presentable groups.
+(We note here that if $G$ and $H$ are isomorphic groups and $\mathcal M$ is a group property, then $G$ is in $\mathcal M$ if and only if $H$ is in $\mathcal M$.)
+We say that a group presentation has property $\mathcal M$ if it presents a group which belongs to the class $\mathcal M$.
+Examples of group properties include, being abelian, having polynomial growth, being finite and being the trivial group.
+
+In this talk, we are interested in a type of group property known as a \emph{Markov property} which we describe as follows.
+Our aim in this talk is to prove \cref{thm:aiden-raben} which shows that no Markov property is decidable.
+That is, for any given Markov property $\mathcal M$, there does not exist any algorithm which can decide yes/no whether a given finitely presented group has property $\mathcal M$.
+
+\begin{definition}\label{def:markov-prop}
+	A property $\mathcal M$ is a \emph{Markov property} if there exists
+	\begin{itemize}
+		\item a finitely presentable group $E$ which has property $\mathcal M$; and
+		\item a finitely presentable group $P$ such that if $P$ can be embedded as a subgroup of a finitely presented group $H$, then $H$ does not have property $\mathcal M$.
+	\end{itemize}
+	We will refer to these two groups as the \emph{example} and \emph{poison} groups respectively.
+\end{definition}
+
+\subsection{Applications}
+
+The following are Markov properties:
+\begin{enumerate}
+	\item\label{it:1} being trivial;
+	\item being finite;
+	\item being isomorphic to a particular group with decidable word problem;
+	\item being abelian;
+	\item being free;
+	\item being simple;
+	\item having a decidable word problem;
+	\item having polynomial growth;
+	\item being automatic;
+	\item being hyperbolic;
+	\item being automatic;
+	      \item\label{it:2} being a Coxeter group;
+	      \item\label{it:3} being torsion free; and
+	      \item\label{it:4} being amenable
+\end{enumerate}
+
+\subsubsection{Poison Subgroups}
+
+Notice that any group with properties (\ref{it:1}) -- (\ref{it:2}) has a solvable word problem.
+Thus, in this case the poison group can be any group with unsolvable word problem.
+We know that such a finitely presented group exists from our previous talk.
+For (\ref{it:3}), the poison  group can be any group with torsion, for example, $\mathbb Z_2 = \left\langle a \mid a^2\right\rangle$.
+For (\ref{it:4}), $F_2$ is a poison group.
+
+\section{HNN Extensions}
+
+Here we expand on our previous talk showing some additional properties of HNN extensions.
+
+\subsection{Recall}
+In our previous talk~\cite{minicoursePart1}, we provided the following definition and lemma.
+
+\begin{definition}\label{def:hnn-extension}
+	Let $G = \left\langle X \mid R\right\rangle$ be a group, and let $\varphi\colon A\to B$ be a group isomorphism between subgroups $A,B\leq G$.
+	Suppose that the subgroup $A$ has generating set $X_A \subset G$.
+	Then,
+	\[
+		G\hnn_\varphi
+		=
+		\left\langle
+		X, t
+		\mid
+		R, tat^{-1} = \varphi(a)\text{ for each } a\in X_A
+		\right\rangle
+	\]
+	is the \emph{HNN extension of $G$ over $\varphi$}.
+	Notice here that the letter $t$ is a fresh generator which is not contained in the generating set $X$.
+	This new generator is called the \emph{stable letter} of the extension.
+\end{definition}
+
+\begin{lemma}[Britton's Lemma]\label{def:normal-form}
+	Suppose $T_A$ and $T_B$ are sets of coset representatives of the subgroup $A$ and $B$, respectively, in the group $G$.
+	Let $\varphi\colon A\to B$ be an isomorphism.
+	Then, each element of $G\hnn_\varphi$ can be uniquely represented as a word of the form
+	\begin{equation}\label{eq:normal-form}
+		x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+	\end{equation}
+	for some $k\geq 0$ where
+	\begin{enumerate}
+		\item\label{def:normal-form/1} each $x_i \in G$;
+		\item\label{def:normal-form/2} each $\varepsilon_i \in \{1,-1\}$;
+		\item\label{def:normal-form/3} if $\varepsilon_i = 1$, then $x_i \in T_A$;
+		\item\label{def:normal-form/4} if $\varepsilon_i = -1$, then $x_i \in T_b$; and
+		\item\label{def:normal-form/5} there are no \emph{pinches}, i.e., there are no factors $tat^{-1}$ or $t^{-1}bt$ where $a\in A$, $b\in B$.
+	\end{enumerate}
+	Notice that items~\ref{def:normal-form/3},~\ref{def:normal-form/4} and~\ref{def:normal-form/5}, as above, do not apply to $x_0$, and thus $x_0$ can be any element of $G$.
+\end{lemma}
+
+\subsection{Additional Lemmas}
+
+In this section, we prove the following additional lemmas.
+
+\begin{corollary}\label{lem:stable-letter-subgroup}
+	The group $G$ naturally embeds as a subgroup of $G\hnn_\varphi$ for any isomorphism $\varphi \colon A\to B$.
+	Let $G\hnn_\varphi$ be an HNN extension with stable letter $t$, then $\left\langle t\right\rangle\leq G\hnn_\varphi$ is isomorphic $\mathbb Z$, and $G \cap \left\langle t \right\rangle = \{1\}$ where the intersection is taken in the HNN extension.
+\end{corollary}
+\begin{myproof}
+	From \cref{def:normal-form}, it is clear that $G$ naturally embeds into $G\hnn_\varepsilon$ as elements in the normal form $x_0$ where $x_0 \in G$.
+
+	We choose a set of coset representatives $T_A\subset G$ and $T_B\subset G$ of $A$ and $B$, respectively, in the group $G$ such that $1\in T_A$ and $1\in T_B$.
+	Then, from \cref{def:normal-form}, we see that
+  \begin{equation}\label{eq:tsubgroupnf}
+		t^{n} = 1 \cdot t \cdot 1 \cdot t \cdots t \cdot 1
+		\quad\text{and}\quad
+		t^{-n} = 1 \cdot t^{-1} \cdot 1 \cdot t^{-1} \cdots t^{-1} \cdot 1
+  \end{equation}are distinct word in normal form for each $n \in \mathbb N$.
+	Thus, $\left\langle t \right\rangle$ is isomorphic to $\mathbb Z$.
+
+  Moreover, we see that the normal form for elements in $\left\langle t \right\rangle$, as in (\ref{eq:tsubgroupnf}), only intersect with the normal forms for elements in $G$ where the element being represented is the group identity.
+\end{myproof}
+
+\begin{corollary}\label{lem:free-subgroup}
+	Let $G\hnn_\varphi$ be an HNN extension over $\varphi\colon A\to B$ with stable letter $t$,
+	let $H \leq G$ be a subgroup with $H\cap (A\cup B)=\{1\}$.
+	Then, $\left\langle H,t \right\rangle$ is the free product $H * \left\langle t\right\rangle$.
+\end{corollary}
+\begin{myproof}
+  Notice that since $H \cap (A\cup B) = \{1\}$, it then for any $h_1,h_2 \in H$ with $h_1\neq h_2$, that
+	\[
+		h_1 A \cap h_2 A = \{1\}
+		\quad
+		\text{and}
+		\quad
+		h_1 B \cap h_2 B = \{1\}.
+	\]
+	Thus, we can choose coset representatives $T_A$ and $T_B$ of $A$ and $B$, respectively, in $G$ such that
+	\[
+		H \subseteq T_A
+		\quad
+		\text{and}
+		\quad
+		H \subseteq T_B.
+	\]
+	Suppose now that $w$ is a word of the form
+	\[
+    w=
+		x_0 t^{\varepsilon_1} x_1 t^{\varepsilon_2} x_2 \cdots t^{\varepsilon_k} x_k
+	\]
+  where $x_i\in H$, and $\varepsilon_i\in \{-1,1\}$ that does not contain a subword of the form $t\cdot 1\cdot t^{-1}$ or $t^{-1}\cdot 1\cdot t$, then we see that $w$ is a word in normal form.
+	Notice further that these are the normal form words for $H*\left\langle t\right\rangle$.
+	Hence, we find that $\left\langle H,t \right\rangle = H*\left\langle t\right\rangle$.
+\end{myproof}
+
+\begin{definition}\label{def:hnn-sequence}
+	Let $G = \left\langle X_G\mid R_G\right\rangle$ be a group and let $A_1,A_2,\ldots,A_n,B_1,B_2,\ldots,B_n\leq G$ be subgroups such that each $A_i$ is isomorphic to $B_i$ as witnessed by the isomorphism $\varphi_i\colon A_i \to B_i$.
+	Moreover, let $X_{A_i}$ be the generating set of $A_i$.
+	We then write
+	\[
+		G\hnn_{\varphi_1, \varphi_2,\ldots,\varphi_n}
+		=
+		\left\langle
+		X_G,t_1,t_2,\ldots,t_n
+		\mid
+		R_G,
+		t_i a t_i^{-1} = \varphi_i(a)
+		\text{ for each }i\text{ and each }a\in A_i
+		\right\rangle
+	\]
+	for the sequence of $n$ HNN extensions given by the maps $\varphi_1,\ldots,\varphi_n$.
+	We then call $t_1,t_2,\ldots,t_n$ the stable letters of the sequence of extensions.
+\end{definition}
+
+\begin{lemma}\label{lem:hnn-sequence}
+	Suppose that
+	$G\hnn_{\varphi_1, \varphi_2,\ldots,\varphi_k}$
+	is a sequence of HNN extensions with stable letters $t_1,t_2,\ldots,t_k$ as in \cref{def:hnn-sequence}.
+	Then, the subgroup $\left\langle t_1,t_2,\ldots,t_k\right\rangle$ is isomorphic to $F_k$ and the intersection $\left\langle t_1,t_2,\ldots,t_k\right\rangle \cap G = \{1\}$ contains only the group identity.
+\end{lemma}
+
+\begin{myproof}
+	We prove this by induction on the number of isomorphisms $k$.
+
+	For $k=1$, our sequence of HNN extensions $G\hnn_{\varphi_1}$ is just an HNN extension.
+	In this case, the result follows from \cref{lem:stable-letter-subgroup}, and that $F_1 = \mathbb Z$.
+
+	Suppose our result holds for $k=m$, that is, for all HNN extensions
+	\[
+		G\hnn_{\varphi_1, \varphi_2,\ldots,\varphi_m}
+		=
+		\left\langle
+		X_G,t_1,\ldots,t_m
+		\mid
+		R_G,
+		t_i a t_i^{-1} = \varphi_i(a)
+		\text{ for each }1\leq i\leq m\text{ and each }a\in X_{A_i}
+		\right\rangle
+	\]
+	the subgroup $\left\langle t_1,t_2,\ldots,t_m\right\rangle$ is free of rank $m$ and $\left\langle t_1,t_2,\ldots,t_m\right\rangle \cap G=\{1\}$.
+
+	Suppose then that $\varphi_{m+1}\colon A_{m+1}\to B_{m+1}$ is an isomorphism where $A_{m+1},B_{m+1}\leq G$.
+	Then,
+	\[
+		G\hnn_{\varphi_1, \varphi_2,\ldots,\varphi_m,\varphi_{m+1}}
+		=
+		(G\hnn_{\varphi_1, \varphi_2,\ldots,\varphi_m})\hnn_{\varphi_{m+1}}.
+	\]
+	Let $t_{m+1}$ be the stable letter corresponding to $\varphi_{m+1}$.
+	From our inductive hypothesis, we see that $\left\langle t_1,t_2,\ldots,t_m\right\rangle \cap (A_{m+1}\cup B_{m+1}) = \{1\}$ and hence from \cref{lem:free-subgroup}, we see that
+	\[
+		\left\langle t_1,t_2,\ldots,t_m,t_{m+1}\right\rangle
+		= \left\langle t_1,t_2,\ldots,t_m\right\rangle * \left\langle t_{m+1}\right\rangle
+		\cong F_{m} * \mathbb Z \cong F_{m+1}
+	\]
+	and thus $\left\langle t_1,t_2,\ldots,t_{m+1}\right\rangle\cap G=\{1\}$ since elements in $\left\langle t_1,t_2,\ldots,t_{m+1}\right\rangle$ have normal forms
+  \[
+    x_0 t_{m+1}^{\varepsilon_1} x_1 t_{m+1}^{\varepsilon_2}x_2\cdots t_{m+1}^{\varepsilon_k} x_k 
+  \]
+  where each $x_i \in \left\langle t_1,t_2,\ldots,t_{m}\right\rangle$ and each $\varepsilon_i\in \{-1,1\}$, in particular, these normal forms only intersect with the normal form of $G$ at $\left\langle t_1,t_2,\ldots,t_{m}\right\rangle\cap G=\{1\}$
+\end{myproof}
+
+\subsection{HNN Example}
+In the following lemma, we define a group $Y$ as a double HNN extension of $\mathbb{Z}$.
+This group will be used in our proof of \cref{thm:aiden-raben}.
+
+\begin{lemma}\label{lem:groupV}
+	Let $Y$ be the group with presentation
+	\[
+		Y
+		=
+		\left\langle
+		a,b,c
+		\mid
+		b a b^{-1} = a^2,
+		c b c^{-1} = b^2
+		\right\rangle.
+	\]
+	The group $Y$ is a double HNN extensions $\mathbb Z =\left\langle a\right\rangle$.
+
+	The subgroup $\left\langle a,c\right\rangle\leq Y$ is isomorphic to $F_2$, and the quotient $Y/ \llangle c \rrangle_Y$ is the trivial group.
+\end{lemma}
+
+\begin{myproof}
+	Let $\mathbb{Z} = \left\langle a \right\rangle$.
+	We see that this group is isomorphic to $\left\langle a^2\right\rangle$, with isomorphism $\varphi(a)=a^2$.
+	Thus, we may define the HNN extension
+	\[
+		\mathbb{Z}\hnn_\varphi
+		=
+		\left\langle
+		a,b
+		\mid
+		bab^{-1}=a^2
+		\right\rangle
+	\]
+	where $b$ is the stable letter of the extension.
+	From \cref{lem:stable-letter-subgroup}, we see that $a\notin \left\langle b \right\rangle$.
+
+	From \cref{lem:stable-letter-subgroup}, we see that the subgroup $\left\langle b \right\rangle\leq \mathbb{Z}\hnn_\varphi$ is isomorphic to $\mathbb{Z}$ and thus is also isomorphic to $\left\langle b^2 \right\rangle$, with isomorphism given by $\psi(b) = b^2$.
+	Thus, we may define
+	\[
+		Y=
+		(\mathbb{Z}\hnn_\varphi)\hnn_\psi
+		=
+		\left\langle
+		a,b,c
+		\mid
+		b a b^{-1} = a^2,
+		c b c^{-1} = b^2
+		\right\rangle
+	\]
+	where $c$ is the stable letter of the extension.
+	Since $a$ does not belong to either of the amalgamated groups $\left\langle b\right\rangle$ or $\left\langle b^2\right\rangle$, we see from \cref{lem:free-subgroup} that $\left\langle a,c\right\rangle$ is isomorphic to $F_2$.
+
+	Now consider the quotient
+	\[
+		Y/\left\llangle c \right\rrangle_Y
+		=
+		\left\langle
+		a,b,c
+		\mid
+		b a b^{-1} = a^2,
+		c b c^{-1} = b^2,
+		c
+		\right\rangle.
+	\]
+	From this presentation, it follows that $b=b^2$, and thus $b=1$.
+	This then implies that $a=a^2$, and thus $a=1$.
+	Hence, $a=b=c=1$ and thus $Y/\left\llangle c \right\rrangle_Y$ is the trivial group.
+\end{myproof}
+
+\section{Undecidability of Markov Properties}
+
+We are now ready to prove the main theorem of this talk as follows.
+This result was first proven independently by Adian in 1955~\cite{adyan1955algorithmic} and Rabin in 1958~\cite{rabin1958recursive}.
+
+\begin{theorem}[Adian–Rabin theorem]\label{thm:aiden-raben}
+	Let $\mathcal M$ be a Markov property.
+	There is no algorithm\footnote{By \emph{algorithm}, we mean by the computing model introduced in our previous talk.} which can take as input a description of any finitely presented group, and correctly decide yes/no whether the given group satisfies property $\mathcal M$.
+\end{theorem}
+
+\begin{myproof}
+	Let $E = \left\langle X_E \mid R_E \right\rangle$ and $P = \left\langle X_P \mid R_P \right\rangle$ be the example and poison group which witnesses $\mathcal M$ being a Markov property as in \cref{def:markov-prop}.
+	In particular, we note here that $E$ and $P$ are finitely presented.
+	%
+	% \begin{itemize}
+	% 	\item $E$ has property $\mathcal M$; and
+	% 	\item if $H \geq P$ is a finitely presented group, then $H$ does not have property $\mathcal M$.
+	% \end{itemize}
+	Let $U = \left\langle X_U \mid R_U\right\rangle$ be a finitely presented group with unsolvable word problem.
+  We know that such a group $U$ exists from part 1 of this minicourse, in particular, see~Theorem 11.1 in the notes from part 1 of this minicourse~\cite{minicoursePart1}.
+
+	\medskip
+
+	\noindent
+	\underline{Overview:}
+
+	\smallskip
+	\noindent
+	The idea of this proof is to show that if we can decide $\mathcal M$, then we can solve the word problem for $U$.
+	In particular, for each $w\in (X^{\pm 1})^*$, we construct a finitely presented group $W_w$ such that
+	\begin{itemize}
+		\item if $w=_G 1$, then $W_w = \{1\}$; and
+		\item if $w\neq_G 1$, then $W_w\geq P$.
+	\end{itemize}
+	From this, we construct a finitely presented group $G_w = E*W_w$ which has property $\mathcal M$ if and only if $w =_G 1$.
+	Thus, if we were able to decide property $\mathcal M$, then we could solve the word problem for $U$.
+	We separate this construction into several steps as follows.
+
+	\medskip
+
+	\noindent
+	\underline{Step 1:} Constructing the group $H_1$.
+
+	\smallskip
+	\noindent
+	We define a new finitely presented group $H_1$ as
+	\[
+		H_1
+		=
+		U * P * \left\langle y_0 \mid - \right\rangle.
+	\]
+	Let $\{x_1,x_2,\ldots,x_m\} = X_U \cup X_P$ be the generators $U * P$ where $m = |X_U| + |X_P|$.
+
+	Consider now the word $[w,y_0] = w y_0 w^{-1} y_0^{-1}$ in the group $H_1$:
+	\begin{itemize}
+		\item if $w\neq_U 1$, then $\left\langle [w,y_0] \right\rangle$ is isomorphic to $\mathbb Z$; otherwise
+		\item if $w=_U 1$, then $[w,y_0] =_{H_1} 1$.
+	\end{itemize}
+
+	Writing $y_i = y_0 x_i$ for each $i \in \{1,2,\ldots,m\}$, we see that $H_1$ has a finite presentation
+	\[
+		H_1
+		=
+		\left\langle
+		y_0,y_1,\ldots,y_m
+		\mid
+		R_{H_1}
+		\right\rangle
+	\]
+	where $R_{H_1}$ is obtained by taking the words in the finite set of relators $R_U\cup R_P$ and replacing each instance of $x_i$ with $y_0^{-1}y_i$.
+
+	\medskip
+
+	\noindent
+	\underline{Step 2:} Constructing the group $H_2$.
+
+	\smallskip
+	\noindent
+	Notice that for each $i$, the groups $\left\langle y_i\right\rangle$ and $\left\langle y_i^2 \right\rangle$ are both isomorphic to $\mathbb Z$.
+	Thus, for each $i$, the homomorphism $\varphi_i(y_i)=y_i^2$ extends to an isomorphism of these subgroups.
+
+	We now define a group $H_2$ as a sequence of HNN extensions of $H_1$, in particular,
+	\[
+		H_2
+		=H_1 \hnn_{\varphi_0,\varphi_1,\ldots,\varphi_m}=
+		\left\langle
+		y_0,y_1,\ldots,y_m,
+		t_0,t_1,\ldots,t_m
+		\mid
+		R_{H_1},
+		t_i y_i t_i^{-1} = y_i^2
+		\text{ for each }
+		0\leq i \leq m
+		\right\rangle.
+	\]
+	To simplify notation, we will now write
+	$
+		H_2 = \left\langle X_{H_2} \mid R_{H_2} \right\rangle
+	$
+	where $X_{H_2}$ and $R_{H_2}$ are the finite sets of generators and relators as described above.
+
+	From \cref{lem:hnn-sequence}, we see that $\left\langle t_0,t_1,\ldots,t_m\right\rangle$ is isomorphic to $F_{m+1}$ and $\left\langle t_0,t_1,\ldots,t_m\right\rangle\cap H_1 = {1}$.
+
+	Notice that $H_2/\left\llangle t_0,t_1,\ldots,t_m\right\rrangle_{H_2}$ is the trivial group since adding the relations $t_i=1$ would then force each $y_i = y_i^2$ and thus $y_i=1$ resulting in all generators being trivial.
+
+	\medskip
+
+	\noindent
+	\underline{Step 3:} Constructing the group $H_3$.
+
+	\smallskip
+	\noindent
+	Notice that the groups $\left\langle t_0,t_1,t_2,\ldots,t_m\right\rangle$ and $\left\langle t_0^2,t_1^2,t_2^2,\ldots,t_m^2 \right\rangle$ are both isomorphic to $F_{m+1}$.
+	In particular, this isomorphism is witnessed by the map defined such that $\psi(t_i)=t_i^2$ for each $i$.
+
+	We define the group $H_3$ as HNN extension, in particular,
+	\[
+		H_3
+		=H_2\hnn_\psi=
+		\left\langle
+		X_{H_2},z
+		\mid
+		R_{H_2},
+		z t_i z^{-1} = t_i^2
+		\text{ for each }
+		0\leq i \leq m
+		\right\rangle.
+	\]
+	Again, to simplify notation, we write
+	$
+		H_3 =
+		\left\langle
+		X_{H_3}
+		\mid
+		R_{H_3}
+		\right\rangle.
+	$
+
+	Notice that $H_3 /\left\llangle z \right\rrangle_{H_3}$ is the trivial group since adding the relation $z=1$ to $H_3$ would force each $t_i = t_i^2$ and thus $t_i=1$, which, as we saw earlier, would result in each $y_i = 1$.
+	Notice also that if $g \in H_1\setminus \{1\}$, then from \cref{lem:free-subgroup} we see that $\left\langle g,z\right\rangle$ is a rank 2 free group.
+
+	\medskip
+
+	\noindent\underline{Step 4:} Constructing the group $W_w$.
+
+	\smallskip
+	\noindent
+	Let
+	\[
+		Y
+		=
+		\left\langle
+		a,b,c
+		\mid
+		b a b^{-1} = a^2,
+		c b c^{-1} = b^2
+		\right\rangle
+	\]
+	be the group as in \cref{lem:groupV}.
+	To simplify notation, we write $Y = \left\langle X_Y\mid R_Y\right\rangle$.
+
+	Let $w \in (X_U^{\pm 1})^*$ be any word in the generating set of our group $U$ with unsolvable word problem.
+	We now define the group $W_w$ as
+	\[
+		W_w
+		=
+		\left\langle
+		X_{H_3}, X_Y,
+		\mid
+		R_{H_3},
+		R_{Y},
+		z = a,
+		[w,y_0] = c
+		\right\rangle.
+	\]
+	We consider this presentation in the following two cases
+
+	\smallskip
+
+	\noindent
+	Case 1: Suppose that $w=_U 1$.
+
+	\begin{itemize}
+		\item Then, it follows that $[w,y_0]=_{W_w} 1$ and thus $c =_{W_w} 1$.
+		\item From \cref{lem:groupV}, we then see that $a=_{W_w}b=_{W_w}c=_{W_w}1$ and thus $z=_{W_w}1$.
+		\item From $z =_{W_w}1$, it then follows that each $t_i=_{W_w}1$ and thus each $y_i=_{W_w}1$.
+		\item Hence, each generator of $W_w$ is trivial and thus $W_w$ is the trivial group.
+	\end{itemize}
+
+	\smallskip
+
+	\noindent
+	Case 2: Suppose that $w \neq_{U} 1$.
+
+	\begin{itemize}
+		\item Then, $[w,y_0]\in H_1\setminus \{1\}$, and thus $\left\langle [w,y_0], z\right\rangle$ is a rank 2 free group.
+		\item From \cref{lem:groupV}, we see that $\left\langle a,c\right\rangle$ is also a rank 2 free group, and thus $W_w$ is an amalgamated free product of $H_3$ and $Y$.
+		\item Thus, we conclude that $H_3$, and thus $P$, is a subgroup of $W_w$.
+	\end{itemize}
+
+	\medskip
+
+	\noindent
+	\underline{Conclusion:}
+
+	\smallskip
+	\noindent
+	%
+	From the above cases, we see that for each word $w \in (X_U^{\pm 1})^*$, the finitely presented group
+	\[
+		G_w = E * W_w
+	\]
+	has property $\mathcal M$ if and only if $w =_U 1$.
+	Thus, if we are able to decide property $\mathcal M$ for any given finitely presented group, then we would be able to decide the word problem for the group $U$ which would contradict our choice of $U$ as a group with unsolvable word problem.
+\end{myproof}
+
+\printbibliography
+\end{document}

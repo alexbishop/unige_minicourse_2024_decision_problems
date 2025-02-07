@@ -1,0 +1,3 @@
+*.tex text eol=lf
+*.bib text eol=lf
+latexmkrc text eol=lf
