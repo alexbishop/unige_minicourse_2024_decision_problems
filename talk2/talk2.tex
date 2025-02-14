@@ -226,7 +226,7 @@
 
 \title{Decision problems in group theory\\(Part 2: Markov Properties)}
 \author{Alex Bishop}
-\date{22 May 2024 \textit{(updated 14 Feb 2025)}}
+\date{22 May 2024 \textit{(updated 15 Feb 2025)}}
 \email{alexbishop1234@gmail.com}
 \urladdr{https://alexbishop.github.io}
 \address{%
@@ -341,7 +341,7 @@ In this section, we prove the following additional lemmas.
 
 \begin{corollary}\label{lem:stable-letter-subgroup}
 	The group $G$ naturally embeds as a subgroup of $G\hnn_\varphi$ for any isomorphism $\varphi \colon A\to B$.
-	Let $G\hnn_\varphi$ be an HNN extension with stable letter $t$, then $\left\langle t\right\rangle\leq G\hnn_\varphi$ is isomorphic $\mathbb Z$, and $G \cap \left\langle t \right\rangle = \{1\}$ where the intersection is taken in the HNN extension.
+	Let $G\hnn_\varphi$ be an HNN extension with stable letter $t$, then $\left\langle t\right\rangle\leq G\hnn_\varphi$ is isomorphic to $\mathbb Z$, and $G \cap \left\langle t \right\rangle = \{1\}$ where the intersection is taken in the HNN extension.
 \end{corollary}
 \begin{myproof}
 	From \cref{def:normal-form}, it is clear that $G$ naturally embeds into $G\hnn_\varepsilon$ as elements in the normal form $x_0$ where $x_0 \in G$.
@@ -527,6 +527,46 @@ This group will be used in our proof of \cref{thm:aiden-raben}.
 	Hence, $a=b=c=1$ and thus $Y/\left\llangle c \right\rrangle_Y$ is the trivial group.
 \end{myproof}
 
+\section{Amalgamated Free Products}
+Recall the following from our previous talk \cite{minicoursePart1}.
+
+\begin{definition}\label{def:amalgamated}
+	Let $G = \left\langle X_G\mid R_G \right\rangle$, $H = \left\langle X_H \mid R_H\right\rangle$ be groups,
+	and let $\varphi\colon A\to B$ be an isomorphism where $A\leq G$ and $B\leq H$.
+	Suppose that $X_A\subseteq G$ is a generating set for $A$.
+	Then,
+	\[
+		G*_\varphi H
+		=
+		\left\langle X_G, X_H
+		\mid
+		R_G, R_H, a = \varphi(a)\text{ for each }a\in X_A
+		\right\rangle
+	\]
+	is the \emph{amalgamated free product of $G$ and $H$ over $\varphi$}.
+\end{definition}
+
+\begin{lemma}\label{lem:amalgamated-normal-form}
+	Let $E = G *_\varphi H$ where $\varphi\colon A\to B$ with $A\leq G$ and $B \leq H$.
+	Let $T_A\subset G$ and $T_B \subset H$ be sets of coset representatives of $A$ in $G$ and $B$ in $H$, respectively.
+	Then, every element of $E$ can be uniquely expression as a word of the form
+	\[
+		x_1 y_1 x_2 y_2 x_3 y_3 \cdots x_k y_k
+		\qquad\text{or}\qquad
+		x_1 y_1 x_2 y_2 x_3 y_3 \cdots x_k
+	\]
+	for some $k \geq 1$ where
+	\begin{enumerate}
+		\item $x_1 \in G$;
+		\item if $i > 1$, then $x_i \in T_A\setminus A$;
+		\item each $y_i \in T_B\setminus B$;
+	\end{enumerate}
+	Notice here that $x_1$ can be any element of $G$.
+\end{lemma}
+\begin{corollary}\label{cor:amal-natural-embed}
+	The groups $G$ and $H$ embed naturally into the amalgamated product $G*_\varphi H$.
+\end{corollary}
+
 \section{Undecidability of Markov Properties}
 
 We are now ready to prove the main theorem of this talk as follows.
@@ -536,6 +576,10 @@ This result was first proven independently by Adian in 1955~\cite{adyan1955algor
 	Let $\mathcal M$ be a Markov property.
 	There is no algorithm\footnote{By \emph{algorithm}, we mean by the computing model introduced in our previous talk.} which can take as input a description of any finitely presented group, and correctly decide yes/no whether the given group satisfies property $\mathcal M$.
 \end{theorem}
+
+\smallskip
+
+The following proof was adapted from Theorem~7.4 in \cite{amsinotes}.
 
 \begin{myproof}
 	Let $E = \left\langle X_E \mid R_E \right\rangle$ and $P = \left\langle X_P \mid R_P \right\rangle$ be the example and poison group which witnesses $\mathcal M$ being a Markov property as in \cref{def:markov-prop}.
@@ -551,9 +595,9 @@ This result was first proven independently by Adian in 1955~\cite{adyan1955algor
 	\medskip
 
 	\noindent
-	\underline{Overview:}
+	\underline{Overview:}\nopagebreak
 
-	\smallskip
+  \smallskip\nopagebreak
 	\noindent
 	The idea of this proof is to show that if we can decide $\mathcal M$, then we can solve the word problem for $U$.
 	In particular, for each $w\in (X^{\pm 1}_U)^*$, we construct a finitely presented group $W_w$ such that
@@ -694,7 +738,7 @@ This result was first proven independently by Adian in 1955~\cite{adyan1955algor
 		W_w
 		=
 		\left\langle
-		X_{H_3}, X_Y,
+		X_{H_3}, X_Y
 		\mid
 		R_{H_3},
 		R_{Y},
@@ -722,9 +766,11 @@ This result was first proven independently by Adian in 1955~\cite{adyan1955algor
 	Case 2: Suppose that $w \neq_{U} 1$.
 
 	\begin{itemize}
-		\item Then, $[w,y_0]\in H_1\setminus \{1\}$, and thus $\left\langle [w,y_0], z\right\rangle$ is a rank 2 free group.
-		\item From \cref{lem:groupV}, we see that $\left\langle a,c\right\rangle$ is also a rank 2 free group, and thus $W_w$ is an amalgamated free product of $H_3$ and $Y$.
-		\item Thus, we conclude that $H_3$, and thus $P$, is a subgroup of $W_w$.
+    \item From \cref{lem:stable-letter-subgroup}, we see that $H_1$ embeds naturally into the group $H_3$.
+		\item Then, $[w,y_0]\in H_1\setminus \{1\}$, and thus $\left\langle [w,y_0], z\right\rangle$ is a rank 2 free group in $H_3$.
+    \item From \cref{lem:groupV}, we see that $\left\langle a,c\right\rangle$ is a rank 2 free group in $Y$
+    \item Thus, $W_w$ is an amalgamated free product of $H_3$ and $Y$ (see \cref{def:amalgamated}).
+    \item From \cref{cor:amal-natural-embed}, we conclude that $H_3$, and thus $P$, is a subgroup of $W_w$.
 	\end{itemize}
 
 	\medskip
