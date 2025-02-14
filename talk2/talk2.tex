@@ -546,7 +546,7 @@ This result was first proven independently by Adian in 1955~\cite{adyan1955algor
 	% 	\item if $H \geq P$ is a finitely presented group, then $H$ does not have property $\mathcal M$.
 	% \end{itemize}
 	Let $U = \left\langle X_U \mid R_U\right\rangle$ be a finitely presented group with unsolvable word problem.
-  We know that such a group $U$ exists from part 1 of this minicourse, in particular, see~Theorem 11.1 in the notes from part 1 of this minicourse~\cite{minicoursePart1}.
+  We know that such a group $U$ exists from part 1 of this minicourse, in particular, see~Theorem~11.1 in the notes from part 1 of this minicourse~\cite{minicoursePart1}.
 
 	\medskip
 
@@ -556,12 +556,12 @@ This result was first proven independently by Adian in 1955~\cite{adyan1955algor
 	\smallskip
 	\noindent
 	The idea of this proof is to show that if we can decide $\mathcal M$, then we can solve the word problem for $U$.
-	In particular, for each $w\in (X^{\pm 1})^*$, we construct a finitely presented group $W_w$ such that
+	In particular, for each $w\in (X^{\pm 1}_U)^*$, we construct a finitely presented group $W_w$ such that
 	\begin{itemize}
-		\item if $w=_G 1$, then $W_w = \{1\}$; and
-		\item if $w\neq_G 1$, then $W_w\geq P$.
+		\item if $w=_U 1$, then $W_w = \{1\}$; and
+		\item if $w\neq_U 1$, then $W_w\geq P$.
 	\end{itemize}
-	From this, we construct a finitely presented group $G_w = E*W_w$ which has property $\mathcal M$ if and only if $w =_G 1$.
+	From this, we construct a finitely presented group $G_w = E*W_w$ which has property $\mathcal M$ if and only if $w =_U 1$.
 	Thus, if we were able to decide property $\mathcal M$, then we could solve the word problem for $U$.
 	We separate this construction into several steps as follows.
 
@@ -580,7 +580,7 @@ This result was first proven independently by Adian in 1955~\cite{adyan1955algor
 	\]
 	Let $\{x_1,x_2,\ldots,x_m\} = X_U \cup X_P$ be the generators $U * P$ where $m = |X_U| + |X_P|$.
 
-	Consider now the word $[w,y_0] = w y_0 w^{-1} y_0^{-1}$ in the group $H_1$:
+  Let $w\in (X^{\pm 1}_U)^*$, and consider the word $[w,y_0] = w y_0 w^{-1} y_0^{-1}$ in the group $H_1$:
 	\begin{itemize}
 		\item if $w\neq_U 1$, then $\left\langle [w,y_0] \right\rangle$ is isomorphic to $\mathbb Z$; otherwise
 		\item if $w=_U 1$, then $[w,y_0] =_{H_1} 1$.
@@ -744,4 +744,5 @@ This result was first proven independently by Adian in 1955~\cite{adyan1955algor
 \end{myproof}
 
 \printbibliography
+\bigskip
 \end{document}
